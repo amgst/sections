@@ -1,0 +1,47 @@
+<div class="section-factory-grid-wrap">
+  {% if block.settings.heading != blank %}
+    <h2 class="section-factory-grid-heading">{{ block.settings.heading }}</h2>
+  {% endif %}
+
+  {% if block.settings.collection != blank %}
+    <div class="section-factory-grid" style="--sf-columns: {{ block.settings.columns }};">
+      {% for product in block.settings.collection.products limit: block.settings.products_to_show %}
+        <div class="section-factory-grid-card">
+          <a href="{{ product.url }}" class="section-factory-grid-card__media">
+            {% if product.featured_image %}
+              {{ product.featured_image | image_url: width: 500 | image_tag: loading: 'lazy' }}
+            {% endif %}
+          </a>
+          <a href="{{ product.url }}" class="section-factory-grid-card__title">{{ product.title }}</a>
+          <div class="section-factory-grid-card__price">{{ product.price | money }}</div>
+          {% form 'product', product, class: 'section-factory-grid-card__form' %}
+            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+            <button type="submit" class="section-factory-grid-card__button" {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
+              {% if product.selected_or_first_available_variant.available %}
+                Quick add
+              {% else %}
+                Sold out
+              {% endif %}
+            </button>
+          {% endform %}
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="section-factory-grid-empty">Select a collection in the theme editor to show products here.</p>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Product Grid",
+  "target": "section",
+  "stylesheet": "product_grid.css",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Shop the collection" },
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "range", "id": "products_to_show", "label": "Products to show", "min": 2, "max": 12, "step": 1, "default": 4 },
+    { "type": "range", "id": "columns", "label": "Columns on desktop", "min": 2, "max": 4, "step": 1, "default": 3 }
+  ]
+}
+{% endschema %}
