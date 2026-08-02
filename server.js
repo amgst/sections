@@ -42,9 +42,9 @@ const SECTION_CATALOG = [
 // via a deep link into the theme editor (direct theme-file writes require a Shopify
 // exemption regular apps don't have — see themeFilesUpsert's write_themes restriction).
 const THEME_APP_BLOCKS = {
-  'hero-banner': 'hero_banner',
-  'product-grid': 'product_grid',
-  'testimonials': 'testimonials'
+  'hero-banner': 'wb-hero-banner',
+  'product-grid': 'wb-product-grid',
+  'testimonials': 'wb-testimonials'
 };
 
 app.get('/api/sections', (_req, res) => {
