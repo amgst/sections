@@ -2,7 +2,7 @@
 
 name = "sections"
 client_id = "36bd69f223ca1e6deb85537708964d45"
-application_url = "https://sections-two-pi.vercel.app"
+application_url = "https://sections-two-pi.vercel.app/admin"
 embedded = true
 
 [access_scopes]
