@@ -2,7 +2,7 @@
 
 name = "sections"
 client_id = "36bd69f223ca1e6deb85537708964d45"
-application_url = "https://your-vercel-app-url.vercel.app"
+application_url = "https://sections-two-pi.vercel.app"
 embedded = true
 
 [access_scopes]
@@ -16,5 +16,5 @@ api_version = "2025-01"
 
 [auth]
 redirect_urls = [
-  "https://your-vercel-app-url.vercel.app/api/auth/callback"
+  "https://sections-two-pi.vercel.app/api/auth/callback"
 ]
