@@ -1,0 +1,19 @@
+{
+  "name": "shopify-section-app",
+  "version": "1.0.0",
+  "description": "Public Shopify app starter inspired by a section factory-style app.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "shopify",
+    "app",
+    "sections"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Section Factory — Public Shopify App</title>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: linear-gradient(135deg, #0f172a, #111827 55%, #1d4ed8);
+        color: #fff;
+      }
+      .wrap {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 48px 24px 72px;
+      }
+      .hero {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 28px;
+        align-items: center;
+      }
+      h1 { font-size: 3.2rem; margin: 0 0 14px; }
+      p { font-size: 1.04rem; line-height: 1.7; color: #dbeafe; }
+      .btns { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+      .btn {
+        text-decoration: none;
+        padding: 12px 18px;
+        border-radius: 10px;
+        font-weight: 700;
+      }
+      .btn-primary { background: #fff; color: #0f172a; }
+      .btn-secondary { background: rgba(255,255,255,.1); color: #fff; border: 1px solid rgba(255,255,255,.2); }
+      .card {
+        background: rgba(255,255,255,.08);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,.15);
+        border-radius: 18px;
+        padding: 22px;
+      }
+      .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 28px; }
+      .stat {
+        background: rgba(255,255,255,.08);
+        border-radius: 14px;
+        padding: 16px;
+        text-align: center;
+      }
+      @media (max-width: 840px) {
+        .hero { grid-template-columns: 1fr; }
+        .stats { grid-template-columns: 1fr; }
+        h1 { font-size: 2.4rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <section class="hero">
+        <div>
+          <span style="display:inline-block;background:#ffffff22;padding:8px 12px;border-radius:999px;font-size:.84rem;margin-bottom:14px;">Public Shopify app starter</span>
+          <h1>Create store sections your merchants can install in minutes.</h1>
+          <p>
+            This starter mirrors the positioning of a Section Factory-style Shopify app: fast onboarding,
+            reusable section templates, and a polished admin experience for merchants.
+          </p>
+          <div class="btns">
+            <a class="btn btn-primary" href="/admin">Open Admin Demo</a>
+            <a class="btn btn-secondary" href="/api/sections">View Section API</a>
+          </div>
+        </div>
+        <div class="card">
+          <h2 style="margin-top:0;">App Highlights</h2>
+          <ul>
+            <li>Embedded merchant dashboard</li>
+            <li>Section template catalog</li>
+            <li>Public app listing-ready structure</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="stats">
+        <div class="stat">
+          <strong>50+</strong>
+          <div>section templates</div>
+        </div>
+        <div class="stat">
+          <strong>1-click</strong>
+          <div>installation flow</div>
+        </div>
+        <div class="stat">
+          <strong>24/7</strong>
+          <div>merchant support</div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
