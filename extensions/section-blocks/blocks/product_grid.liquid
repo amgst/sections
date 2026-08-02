@@ -1,22 +1,22 @@
-<div class="section-factory-grid-wrap">
+<div class="wb-grid-wrap">
   {% if block.settings.heading != blank %}
-    <h2 class="section-factory-grid-heading">{{ block.settings.heading }}</h2>
+    <h2 class="wb-grid-heading">{{ block.settings.heading }}</h2>
   {% endif %}
 
   {% if block.settings.collection != blank %}
-    <div class="section-factory-grid" style="--sf-columns: {{ block.settings.columns }};">
+    <div class="wb-grid" style="--wb-columns: {{ block.settings.columns }};">
       {% for product in block.settings.collection.products limit: block.settings.products_to_show %}
-        <div class="section-factory-grid-card">
-          <a href="{{ product.url }}" class="section-factory-grid-card__media">
+        <div class="wb-grid-card">
+          <a href="{{ product.url }}" class="wb-grid-card__media">
             {% if product.featured_image %}
               {{ product.featured_image | image_url: width: 500 | image_tag: loading: 'lazy' }}
             {% endif %}
           </a>
-          <a href="{{ product.url }}" class="section-factory-grid-card__title">{{ product.title }}</a>
-          <div class="section-factory-grid-card__price">{{ product.price | money }}</div>
-          {% form 'product', product, class: 'section-factory-grid-card__form' %}
+          <a href="{{ product.url }}" class="wb-grid-card__title">{{ product.title }}</a>
+          <div class="wb-grid-card__price">{{ product.price | money }}</div>
+          {% form 'product', product, class: 'wb-grid-card__form' %}
             <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-            <button type="submit" class="section-factory-grid-card__button" {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
+            <button type="submit" class="wb-grid-card__button" {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
               {% if product.selected_or_first_available_variant.available %}
                 Quick add
               {% else %}
@@ -28,7 +28,7 @@
       {% endfor %}
     </div>
   {% else %}
-    <p class="section-factory-grid-empty">Select a collection in the theme editor to show products here.</p>
+    <p class="wb-grid-empty">Select a collection in the theme editor to show products here.</p>
   {% endif %}
 </div>
 

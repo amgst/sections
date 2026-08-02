@@ -1,11 +1,11 @@
-<div class="section-factory-testimonials" style="background-color: {{ block.settings.background_color }}; color: {{ block.settings.text_color }};">
+<div class="wb-testimonials" style="background-color: {{ block.settings.background_color }}; color: {{ block.settings.text_color }};">
   {% if block.settings.heading != blank %}
-    <h2 class="section-factory-testimonials__heading">{{ block.settings.heading }}</h2>
+    <h2 class="wb-testimonials__heading">{{ block.settings.heading }}</h2>
   {% endif %}
 
-  <div class="section-factory-testimonials__grid">
+  <div class="wb-testimonials__grid">
     {% if block.settings.testimonial_1_quote != blank %}
-      <blockquote class="section-factory-testimonials__card">
+      <blockquote class="wb-testimonials__card">
         <p>&ldquo;{{ block.settings.testimonial_1_quote }}&rdquo;</p>
         {% if block.settings.testimonial_1_author != blank %}
           <cite>{{ block.settings.testimonial_1_author }}</cite>
@@ -13,7 +13,7 @@
       </blockquote>
     {% endif %}
     {% if block.settings.testimonial_2_quote != blank %}
-      <blockquote class="section-factory-testimonials__card">
+      <blockquote class="wb-testimonials__card">
         <p>&ldquo;{{ block.settings.testimonial_2_quote }}&rdquo;</p>
         {% if block.settings.testimonial_2_author != blank %}
           <cite>{{ block.settings.testimonial_2_author }}</cite>
@@ -21,7 +21,7 @@
       </blockquote>
     {% endif %}
     {% if block.settings.testimonial_3_quote != blank %}
-      <blockquote class="section-factory-testimonials__card">
+      <blockquote class="wb-testimonials__card">
         <p>&ldquo;{{ block.settings.testimonial_3_quote }}&rdquo;</p>
         {% if block.settings.testimonial_3_author != blank %}
           <cite>{{ block.settings.testimonial_3_author }}</cite>
