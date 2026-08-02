@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const { shopify } = require('./lib/shopify');
+const { getShopify } = require('./lib/shopify');
 const { requireShopifySession } = require('./lib/requireShopifySession');
 
 const app = express();
@@ -42,6 +42,7 @@ app.get('/api/sections', (_req, res) => {
 
 app.get('/api/shop', requireShopifySession, async (req, res) => {
   try {
+    const shopify = getShopify();
     const client = new shopify.clients.Graphql({ session: req.shopifySession });
     const { data } = await client.request(`
       query {
