@@ -14,30 +14,78 @@ app.get('/healthz', (_req, res) => {
   res.json({ ok: true, service: 'shopify-section-app' });
 });
 
+const SECTION_CATALOG = [
+  {
+    id: 'hero-banner',
+    name: 'Hero Banner',
+    category: 'Marketing',
+    price: 'Free',
+    description: 'High-converting hero area for promos and launches.'
+  },
+  {
+    id: 'product-grid',
+    name: 'Product Grid',
+    category: 'Storefront',
+    price: 'Pro',
+    description: 'Flexible product showcase with quick add buttons.'
+  },
+  {
+    id: 'testimonials',
+    name: 'Testimonials',
+    category: 'Social Proof',
+    price: 'Free',
+    description: 'Customer review block to boost trust.'
+  }
+];
+
+// App block handles from extensions/section-blocks/blocks/*.liquid, added to the theme
+// via a deep link into the theme editor (direct theme-file writes require a Shopify
+// exemption regular apps don't have — see themeFilesUpsert's write_themes restriction).
+const THEME_APP_BLOCKS = {
+  'hero-banner': 'hero_banner'
+};
+
 app.get('/api/sections', (_req, res) => {
-  res.json([
-    {
-      id: 'hero-banner',
-      name: 'Hero Banner',
-      category: 'Marketing',
-      price: 'Free',
-      description: 'High-converting hero area for promos and launches.'
-    },
-    {
-      id: 'product-grid',
-      name: 'Product Grid',
-      category: 'Storefront',
-      price: 'Pro',
-      description: 'Flexible product showcase with quick add buttons.'
-    },
-    {
-      id: 'testimonials',
-      name: 'Testimonials',
-      category: 'Social Proof',
-      price: 'Free',
-      description: 'Customer review block to boost trust.'
+  res.json(
+    SECTION_CATALOG.map((section) => ({
+      ...section,
+      installable: Boolean(THEME_APP_BLOCKS[section.id])
+    }))
+  );
+});
+
+app.get('/api/sections/:id/install-link', requireShopifySession, async (req, res) => {
+  const handle = THEME_APP_BLOCKS[req.params.id];
+  if (!handle) {
+    return res.status(404).json({ error: 'This section is not available to install yet' });
+  }
+
+  try {
+    const shopify = getShopify();
+    const client = new shopify.clients.Graphql({ session: req.shopifySession });
+
+    const themeResult = await client.request(`
+      query {
+        themes(first: 1, roles: [MAIN]) {
+          nodes { id name }
+        }
+      }
+    `);
+    const theme = themeResult.data.themes.nodes[0];
+    if (!theme) {
+      return res.status(404).json({ error: 'No published theme found on this store' });
     }
-  ]);
+    const themeIdNumeric = theme.id.split('/').pop();
+
+    const editorUrl =
+      `https://${req.shopifySession.shop}/admin/themes/${themeIdNumeric}/editor` +
+      `?template=index&addAppBlockId=${process.env.SHOPIFY_API_KEY}/${handle}&target=newAppsSection`;
+
+    res.json({ ok: true, theme: theme.name, editorUrl });
+  } catch (err) {
+    console.error('Section install-link error:', err.message);
+    res.status(502).json({ error: 'Failed to reach Shopify Admin API' });
+  }
 });
 
 app.get('/api/shop', requireShopifySession, async (req, res) => {

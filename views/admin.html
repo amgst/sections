@@ -45,6 +45,30 @@
       font-size: 12px;
       margin-bottom: 8px;
     }
+    .install-btn {
+      margin-top: 12px;
+      display: inline-block;
+      border: none;
+      background: #111827;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .install-btn:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+    .install-status {
+      display: block;
+      margin-top: 8px;
+      font-size: 12px;
+    }
+    .install-status.error { color: #b91c1c; }
+    .install-status.ok { color: #047857; }
+    .install-status a { color: inherit; }
   </style>
 </head>
 <body>
@@ -63,6 +87,12 @@
   </div>
 
   <script>
+    async function getSessionToken() {
+      const host = new URLSearchParams(window.location.search).get('host');
+      if (!host || !window.shopify) return null;
+      return window.shopify.idToken();
+    }
+
     async function loadTemplates() {
       const res = await fetch('/api/sections');
       const templates = await res.json();
@@ -74,16 +104,61 @@
           <h3>${item.name}</h3>
           <p>${item.description}</p>
           <strong>${item.price}</strong>
+          ${item.installable ? `
+            <button class="install-btn" data-id="${item.id}">Add to theme</button>
+            <span class="install-status" data-status-for="${item.id}"></span>
+          ` : ''}
         </div>
       `).join('');
+
+      grid.querySelectorAll('.install-btn').forEach((btn) => {
+        btn.addEventListener('click', () => installSection(btn.dataset.id));
+      });
+    }
+
+    async function installSection(id) {
+      const btn = document.querySelector(`.install-btn[data-id="${id}"]`);
+      const status = document.querySelector(`[data-status-for="${id}"]`);
+      status.className = 'install-status';
+      status.textContent = '';
+
+      const token = await getSessionToken();
+      if (!token) {
+        status.className = 'install-status error';
+        status.textContent = 'Open this app from inside Shopify admin to install sections.';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Opening theme editor…';
+
+      try {
+        const res = await fetch(`/api/sections/${id}/install-link`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const result = await res.json();
+
+        if (!res.ok) {
+          throw new Error(result.error || 'Could not create install link');
+        }
+
+        status.className = 'install-status ok';
+        status.textContent = `Opening theme editor for "${result.theme}"…`;
+        window.open(result.editorUrl, '_top');
+      } catch (err) {
+        status.className = 'install-status error';
+        status.textContent = err.message;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Install to theme';
+      }
     }
 
     async function loadShopInfo() {
-      const host = new URLSearchParams(window.location.search).get('host');
-      if (!host || !window.shopify) return;
+      const token = await getSessionToken();
+      if (!token) return;
 
       try {
-        const token = await window.shopify.idToken();
         const res = await fetch('/api/shop', {
           headers: { Authorization: `Bearer ${token}` }
         });
