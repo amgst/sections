@@ -10,11 +10,11 @@
 
 ## Supabase
 
-Use Supabase for:
-- metadata storage
-- merchant sessions
-- app settings
-- auth or user records
+Used for:
+- `shopify_sessions` table — offline access tokens per shop (auto-created on first use, see `lib/sessionStore.js`)
+- future: metadata storage, app settings, auth or user records
+
+Set `SUPABASE_POOLER_URL` (preferred for serverless) or `SUPABASE_DIRECT_URL` in env vars.
 
 ## Cloudflare R2
 
@@ -23,9 +23,12 @@ Use R2 for:
 - uploaded section previews
 - downloadable media files
 
+## Shopify app config
+
+After deploying, update `shopify.app.toml`'s `application_url` and `[auth].redirect_urls` to the real Vercel URL, run `shopify app deploy` to push config, and set `SHOPIFY_APP_URL` in Vercel env vars to match.
+
 ## Suggested next real app changes
 
-- Replace the demo API with Supabase-backed data.
+- Replace the demo section catalog with Supabase-backed data.
 - Store uploaded section images in R2.
-- Use Vercel serverless functions for `/api/*` endpoints.
-- Add Shopify OAuth and App Bridge when moving toward a production public app.
+- Register an `app/uninstalled` webhook to delete the shop's row from `shopify_sessions`.

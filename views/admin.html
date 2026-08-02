@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="shopify-api-key" content="%%SHOPIFY_API_KEY%%" />
+  <script src="https://cdn.shopify.com/shopifycloud/app-bridge.js"></script>
   <title>Section Factory Admin Demo</title>
   <style>
     body {
@@ -52,6 +54,11 @@
       <p style="margin:8px 0 0; color:#d1d5db;">Merchant dashboard for section templates and store blocks.</p>
     </div>
 
+    <div class="card" id="shopInfo" style="margin-bottom:16px; display:none;">
+      <div class="pill">Connected store</div>
+      <div id="shopInfoText"></div>
+    </div>
+
     <div class="grid" id="templateGrid"></div>
   </div>
 
@@ -71,7 +78,29 @@
       `).join('');
     }
 
+    async function loadShopInfo() {
+      const host = new URLSearchParams(window.location.search).get('host');
+      if (!host || !window.shopify) return;
+
+      try {
+        const token = await window.shopify.idToken();
+        const res = await fetch('/api/shop', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (!res.ok) return;
+        const shop = await res.json();
+
+        const box = document.getElementById('shopInfo');
+        box.style.display = 'block';
+        document.getElementById('shopInfoText').textContent =
+          `${shop.name} (${shop.myshopifyDomain}) — ${shop.plan?.displayName ?? ''}`;
+      } catch (err) {
+        console.error('Failed to load shop info', err);
+      }
+    }
+
     loadTemplates();
+    loadShopInfo();
   </script>
 </body>
 </html>

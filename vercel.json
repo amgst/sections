@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "cleanUrls": true,
-  "outputDirectory": "public",
-  "routes": [
-    { "src": "/admin", "dest": "/admin.html" },
-    { "src": "/api/sections", "dest": "/api/sections" },
-    { "src": "/api/health", "dest": "/api/health" }
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "{public,views}/**"
+    }
+  },
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/api/index" }
   ]
 }

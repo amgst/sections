@@ -1,5 +1,9 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
+const { shopify } = require('./lib/shopify');
+const { requireShopifySession } = require('./lib/requireShopifySession');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -36,14 +40,52 @@ app.get('/api/sections', (_req, res) => {
   ]);
 });
 
-app.get('/admin', (_req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+app.get('/api/shop', requireShopifySession, async (req, res) => {
+  try {
+    const client = new shopify.clients.Graphql({ session: req.shopifySession });
+    const { data } = await client.request(`
+      query {
+        shop {
+          name
+          email
+          myshopifyDomain
+          plan { displayName }
+        }
+      }
+    `);
+    res.json(data.shop);
+  } catch (err) {
+    console.error('Admin API error:', err.message);
+    res.status(502).json({ error: 'Failed to reach Shopify Admin API' });
+  }
+});
+
+const SHOP_DOMAIN_RE = /^[a-z0-9][a-z0-9-]*\.myshopify\.com$/i;
+
+app.get('/admin', (req, res) => {
+  const shopParam = typeof req.query.shop === 'string' ? req.query.shop : '';
+  const shop = SHOP_DOMAIN_RE.test(shopParam) ? shopParam : '';
+  const frameAncestors = shop
+    ? `https://${shop} https://admin.shopify.com`
+    : 'https://admin.shopify.com';
+
+  const template = fs.readFileSync(path.join(__dirname, 'views', 'admin.html'), 'utf8');
+  const html = template.replace('%%SHOPIFY_API_KEY%%', process.env.SHOPIFY_API_KEY || '');
+
+  res
+    .set('Content-Type', 'text/html')
+    .set('Content-Security-Policy', `frame-ancestors ${frameAncestors};`)
+    .send(html);
 });
 
 app.get('/', (_req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`Shopify Section App running at http://localhost:${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Shopify Section App running at http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
