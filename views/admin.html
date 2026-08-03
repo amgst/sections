@@ -5,135 +5,609 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="shopify-api-key" content="%%SHOPIFY_API_KEY%%" />
   <script src="https://cdn.shopify.com/shopifycloud/app-bridge.js"></script>
-  <title>Section Factory Admin Demo</title>
+  <title>Section Factory Admin</title>
   <style>
+    :root {
+      --bg: #f1f2f4;
+      --surface: #ffffff;
+      --border: #e3e4e6;
+      --text: #1a1c1d;
+      --text-subdued: #6d7175;
+      --green: #008060;
+      --green-dark: #006e52;
+      --green-tint: #e3f6ef;
+      --gold-tint: #fdf3d4;
+      --gold-text: #8a6116;
+      --red-tint: #fbeae5;
+      --red-text: #b91c1c;
+      --radius: 12px;
+      --shadow: 0 1px 2px rgba(26,28,29,.06), 0 1px 6px rgba(26,28,29,.04);
+    }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f3f4f6;
-      color: #111827;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
     }
     .shell {
-      max-width: 1100px;
+      max-width: 1120px;
       margin: 0 auto;
-      padding: 32px 20px;
+      padding: 24px 20px 56px;
     }
+
+    /* Topbar */
     .topbar {
-      background: #111827;
-      color: white;
-      border-radius: 16px;
-      padding: 18px 20px;
-      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
     }
+    .topbar h1 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 650;
+      letter-spacing: -.01em;
+    }
+    .topbar p {
+      margin: 2px 0 0;
+      color: var(--text-subdued);
+      font-size: 13px;
+    }
+    .shop-chip {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 14px 6px 8px;
+      font-size: 13px;
+      box-shadow: var(--shadow);
+    }
+    .shop-chip .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--green);
+      flex-shrink: 0;
+    }
+    .shop-chip strong { font-weight: 600; }
+    .shop-chip .muted { color: var(--text-subdued); }
+
+    /* Toolbar */
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .search-box {
+      position: relative;
+      flex: 1 1 240px;
+    }
+    .search-box svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-subdued);
+      pointer-events: none;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 10px 12px 10px 36px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      transition: border-color .12s, box-shadow .12s;
+    }
+    .search-box input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px var(--green-tint);
+    }
+    .chip-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .chip {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background .12s, border-color .12s, color .12s;
+      white-space: nowrap;
+    }
+    .chip:hover { border-color: #c9cccf; }
+    .chip.active {
+      background: var(--text);
+      border-color: var(--text);
+      color: #fff;
+    }
+
+    /* Grid */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
     }
     .card {
-      background: white;
-      border-radius: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
       padding: 18px;
-      box-shadow: 0 8px 24px rgba(0,0,0,.06);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow .15s, transform .15s;
+    }
+    .card:hover {
+      box-shadow: 0 2px 4px rgba(26,28,29,.08), 0 4px 14px rgba(26,28,29,.08);
+      transform: translateY(-1px);
+    }
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
     }
     .pill {
       display: inline-block;
-      background: #dbeafe;
-      color: #1d4ed8;
-      padding: 5px 9px;
+      background: #eef1f2;
+      color: #4a4e51;
+      padding: 4px 10px;
       border-radius: 999px;
-      font-size: 12px;
-      margin-bottom: 8px;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: .01em;
+      text-transform: uppercase;
     }
+    .price-tag {
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+    .price-tag.free { background: var(--green-tint); color: var(--green-dark); }
+    .price-tag.pro { background: var(--gold-tint); color: var(--gold-text); }
+
+    .card h3 {
+      margin: 0 0 6px;
+      font-size: 16px;
+      font-weight: 650;
+    }
+    .card p.desc {
+      margin: 0;
+      color: var(--text-subdued);
+      font-size: 13.5px;
+      line-height: 1.5;
+      flex-grow: 1;
+    }
+
     .install-btn {
-      margin-top: 12px;
-      display: inline-block;
+      margin-top: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
       border: none;
-      background: #111827;
+      background: var(--green);
       color: white;
-      padding: 8px 14px;
+      padding: 9px 14px;
       border-radius: 8px;
-      font-size: 13px;
+      font-size: 13.5px;
       font-weight: 600;
       cursor: pointer;
+      transition: background .12s;
     }
+    .install-btn:hover:not(:disabled) { background: var(--green-dark); }
     .install-btn:disabled {
-      opacity: 0.6;
+      opacity: 0.65;
       cursor: default;
     }
+    .install-btn .spinner {
+      width: 13px;
+      height: 13px;
+      border: 2px solid rgba(255,255,255,.4);
+      border-top-color: #fff;
+      border-radius: 999px;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .coming-soon {
+      margin-top: 16px;
+      font-size: 12.5px;
+      color: var(--text-subdued);
+      font-style: italic;
+    }
+
     .install-status {
       display: block;
       margin-top: 8px;
-      font-size: 12px;
+      font-size: 12.5px;
+      line-height: 1.4;
     }
-    .install-status.error { color: #b91c1c; }
-    .install-status.ok { color: #047857; }
+    .install-status.error { color: var(--red-text); }
+    .install-status.ok { color: var(--green-dark); }
     .install-status a { color: inherit; }
+
+    /* Skeleton loading */
+    .skel-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    .skel-line {
+      background: linear-gradient(90deg, #eef0f1 25%, #e4e6e8 37%, #eef0f1 63%);
+      background-size: 400% 100%;
+      animation: shimmer 1.4s ease infinite;
+      border-radius: 6px;
+    }
+    @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 56px 20px;
+      color: var(--text-subdued);
+    }
+    .empty-state svg { margin-bottom: 12px; opacity: .5; }
+    .empty-state p { margin: 0; font-size: 14px; }
+
+    /* Theme picker modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(26,28,29,.45);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface);
+      border-radius: 14px;
+      width: 100%;
+      max-width: 420px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 12px 40px rgba(0,0,0,.25);
+    }
+    .modal-header {
+      padding: 18px 20px 4px;
+    }
+    .modal-header h2 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 650;
+    }
+    .modal-header p {
+      margin: 4px 0 0;
+      font-size: 13px;
+      color: var(--text-subdued);
+    }
+    .modal-body {
+      padding: 12px 12px 4px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .theme-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 10px;
+      border-radius: 9px;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+    .theme-row:hover { background: var(--bg); }
+    .theme-row.selected {
+      background: var(--green-tint);
+      border-color: var(--green);
+    }
+    .theme-row .radio {
+      width: 17px;
+      height: 17px;
+      border-radius: 999px;
+      border: 2px solid #c9cccf;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .theme-row.selected .radio {
+      border-color: var(--green);
+    }
+    .theme-row.selected .radio::after {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border-radius: 999px;
+      background: var(--green);
+    }
+    .theme-row .theme-name {
+      font-size: 14px;
+      font-weight: 550;
+      flex: 1;
+    }
+    .theme-row .live-badge {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--green-dark);
+      background: var(--green-tint);
+      padding: 3px 8px;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 14px 20px 18px;
+    }
+    .btn-cancel {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      padding: 9px 14px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .modal-msg {
+      padding: 20px;
+      font-size: 13.5px;
+      color: var(--text-subdued);
+    }
+    .modal-msg.error { color: var(--red-text); }
   </style>
 </head>
 <body>
   <div class="shell">
     <div class="topbar">
-      <h1 style="margin:0;">Section Factory Admin</h1>
-      <p style="margin:8px 0 0; color:#d1d5db;">Merchant dashboard for section templates and store blocks.</p>
+      <div>
+        <h1>Section Factory</h1>
+        <p>Browse section templates and add them to your theme.</p>
+      </div>
+      <div class="shop-chip" id="shopInfo">
+        <span class="dot"></span>
+        <span id="shopInfoText"></span>
+      </div>
     </div>
 
-    <div class="card" id="shopInfo" style="margin-bottom:16px; display:none;">
-      <div class="pill">Connected store</div>
-      <div id="shopInfoText"></div>
+    <div class="toolbar">
+      <div class="search-box">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M18 18L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <input type="text" id="searchInput" placeholder="Search sections…" autocomplete="off" />
+      </div>
+      <div class="chip-row" id="categoryChips"></div>
     </div>
 
-    <div class="grid" id="templateGrid"></div>
+    <div class="grid" id="templateGrid">
+      <div class="skel-card"><div class="skel-line" style="height:16px;width:60%;margin-bottom:12px;"></div><div class="skel-line" style="height:20px;width:80%;margin-bottom:10px;"></div><div class="skel-line" style="height:13px;width:100%;margin-bottom:6px;"></div><div class="skel-line" style="height:13px;width:70%;"></div></div>
+      <div class="skel-card"><div class="skel-line" style="height:16px;width:50%;margin-bottom:12px;"></div><div class="skel-line" style="height:20px;width:70%;margin-bottom:10px;"></div><div class="skel-line" style="height:13px;width:100%;margin-bottom:6px;"></div><div class="skel-line" style="height:13px;width:60%;"></div></div>
+      <div class="skel-card"><div class="skel-line" style="height:16px;width:55%;margin-bottom:12px;"></div><div class="skel-line" style="height:20px;width:75%;margin-bottom:10px;"></div><div class="skel-line" style="height:13px;width:100%;margin-bottom:6px;"></div><div class="skel-line" style="height:13px;width:65%;"></div></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="themeModalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="themeModalTitle">Choose a theme</h2>
+        <p>Pick which theme to add this section to.</p>
+      </div>
+      <div class="modal-body" id="themeModalBody"></div>
+      <div class="modal-footer">
+        <button class="btn-cancel" id="themeModalCancel">Cancel</button>
+        <button class="install-btn" id="themeModalConfirm" disabled>Add to theme</button>
+      </div>
+    </div>
   </div>
 
   <script>
+    let allTemplates = [];
+    let activeCategory = 'All';
+    let searchTerm = '';
+
     async function getSessionToken() {
       const host = new URLSearchParams(window.location.search).get('host');
       if (!host || !window.shopify) return null;
       return window.shopify.idToken();
     }
 
-    async function loadTemplates() {
-      const res = await fetch('/api/sections');
-      const templates = await res.json();
-      const grid = document.getElementById('templateGrid');
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
 
-      grid.innerHTML = templates.map((item) => `
+    function renderChips() {
+      const categories = ['All', ...new Set(allTemplates.map((t) => t.category))];
+      const chips = document.getElementById('categoryChips');
+      chips.innerHTML = categories.map((c) => `
+        <button class="chip ${c === activeCategory ? 'active' : ''}" data-cat="${escapeHtml(c)}">${escapeHtml(c)}</button>
+      `).join('');
+      chips.querySelectorAll('.chip').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          activeCategory = btn.dataset.cat;
+          renderChips();
+          renderGrid();
+        });
+      });
+    }
+
+    function renderGrid() {
+      const grid = document.getElementById('templateGrid');
+      const filtered = allTemplates.filter((item) => {
+        const matchesCategory = activeCategory === 'All' || item.category === activeCategory;
+        const matchesSearch = !searchTerm || item.name.toLowerCase().includes(searchTerm) || item.description.toLowerCase().includes(searchTerm);
+        return matchesCategory && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <svg width="40" height="40" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.4"/>
+              <path d="M18 18L14 14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+            <p>No sections match your search.</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map((item) => `
         <div class="card">
-          <div class="pill">${item.category}</div>
-          <h3>${item.name}</h3>
-          <p>${item.description}</p>
-          <strong>${item.price}</strong>
+          <div class="card-top">
+            <span class="pill">${escapeHtml(item.category)}</span>
+            <span class="price-tag ${item.price.toLowerCase() === 'free' ? 'free' : 'pro'}">${escapeHtml(item.price)}</span>
+          </div>
+          <h3>${escapeHtml(item.name)}</h3>
+          <p class="desc">${escapeHtml(item.description)}</p>
           ${item.installable ? `
             <button class="install-btn" data-id="${item.id}">Add to theme</button>
             <span class="install-status" data-status-for="${item.id}"></span>
-          ` : ''}
+          ` : `
+            <div class="coming-soon">Not installable yet</div>
+          `}
         </div>
       `).join('');
 
       grid.querySelectorAll('.install-btn').forEach((btn) => {
-        btn.addEventListener('click', () => installSection(btn.dataset.id));
+        btn.addEventListener('click', () => openThemeModal(btn.dataset.id));
       });
     }
 
-    async function installSection(id) {
-      const btn = document.querySelector(`.install-btn[data-id="${id}"]`);
+    async function loadTemplates() {
+      const res = await fetch('/api/sections');
+      allTemplates = await res.json();
+      renderChips();
+      renderGrid();
+    }
+
+    let themesCache = null;
+    let modalSectionId = null;
+    let modalSelectedThemeId = null;
+
+    const themeModalOverlay = document.getElementById('themeModalOverlay');
+    const themeModalBody = document.getElementById('themeModalBody');
+    const themeModalConfirm = document.getElementById('themeModalConfirm');
+    const themeModalTitle = document.getElementById('themeModalTitle');
+
+    async function openThemeModal(sectionId) {
+      modalSectionId = sectionId;
+      modalSelectedThemeId = null;
+      themeModalConfirm.disabled = true;
+      themeModalConfirm.textContent = 'Add to theme';
+
+      const section = allTemplates.find((t) => t.id === sectionId);
+      themeModalTitle.textContent = section ? `Add "${section.name}"` : 'Choose a theme';
+
+      themeModalOverlay.classList.add('open');
+      themeModalBody.innerHTML = '<div class="modal-msg">Loading your themes…</div>';
+
+      const token = await getSessionToken();
+      if (!token) {
+        themeModalBody.innerHTML = '<div class="modal-msg error">Open this app from inside Shopify admin to install sections.</div>';
+        return;
+      }
+
+      try {
+        if (!themesCache) {
+          const res = await fetch('/api/themes', { headers: { Authorization: `Bearer ${token}` } });
+          const result = await res.json();
+          if (!res.ok) throw new Error(result.error || 'Could not load themes');
+          themesCache = result.themes;
+        }
+
+        if (!themesCache.length) {
+          themeModalBody.innerHTML = '<div class="modal-msg">No themes found on this store.</div>';
+          return;
+        }
+
+        const liveTheme = themesCache.find((t) => t.role === 'MAIN');
+        modalSelectedThemeId = (liveTheme || themesCache[0]).id;
+        renderThemeList();
+      } catch (err) {
+        themeModalBody.innerHTML = `<div class="modal-msg error">${escapeHtml(err.message)}</div>`;
+      }
+    }
+
+    function renderThemeList() {
+      themeModalBody.innerHTML = themesCache.map((theme) => `
+        <div class="theme-row ${theme.id === modalSelectedThemeId ? 'selected' : ''}" data-theme-id="${theme.id}">
+          <span class="radio"></span>
+          <span class="theme-name">${escapeHtml(theme.name)}</span>
+          ${theme.role === 'MAIN' ? '<span class="live-badge">Live</span>' : ''}
+        </div>
+      `).join('');
+
+      themeModalBody.querySelectorAll('.theme-row').forEach((row) => {
+        row.addEventListener('click', () => {
+          modalSelectedThemeId = row.dataset.themeId;
+          renderThemeList();
+        });
+      });
+
+      themeModalConfirm.disabled = false;
+    }
+
+    function closeThemeModal() {
+      themeModalOverlay.classList.remove('open');
+      modalSectionId = null;
+    }
+
+    document.getElementById('themeModalCancel').addEventListener('click', closeThemeModal);
+    themeModalOverlay.addEventListener('click', (e) => {
+      if (e.target === themeModalOverlay) closeThemeModal();
+    });
+
+    themeModalConfirm.addEventListener('click', () => {
+      if (modalSectionId && modalSelectedThemeId) {
+        installSection(modalSectionId, modalSelectedThemeId);
+      }
+    });
+
+    async function installSection(id, themeId) {
       const status = document.querySelector(`[data-status-for="${id}"]`);
       status.className = 'install-status';
       status.textContent = '';
 
       const token = await getSessionToken();
       if (!token) {
+        closeThemeModal();
         status.className = 'install-status error';
         status.textContent = 'Open this app from inside Shopify admin to install sections.';
         return;
       }
 
-      btn.disabled = true;
-      btn.textContent = 'Opening theme editor…';
+      themeModalConfirm.disabled = true;
+      themeModalConfirm.innerHTML = '<span class="spinner"></span> Opening theme editor…';
 
       try {
-        const res = await fetch(`/api/sections/${id}/install-link`, {
+        const res = await fetch(`/api/sections/${id}/install-link?themeId=${encodeURIComponent(themeId)}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const result = await res.json();
@@ -144,13 +618,13 @@
 
         status.className = 'install-status ok';
         status.textContent = `Opening theme editor for "${result.theme}"…`;
+        closeThemeModal();
         window.open(result.editorUrl, '_top');
       } catch (err) {
-        status.className = 'install-status error';
-        status.textContent = err.message;
+        themeModalBody.innerHTML = `<div class="modal-msg error">${escapeHtml(err.message)}</div>`;
       } finally {
-        btn.disabled = false;
-        btn.textContent = 'Install to theme';
+        themeModalConfirm.disabled = false;
+        themeModalConfirm.textContent = 'Add to theme';
       }
     }
 
@@ -166,13 +640,18 @@
         const shop = await res.json();
 
         const box = document.getElementById('shopInfo');
-        box.style.display = 'block';
-        document.getElementById('shopInfoText').textContent =
-          `${shop.name} (${shop.myshopifyDomain}) — ${shop.plan?.displayName ?? ''}`;
+        box.style.display = 'inline-flex';
+        document.getElementById('shopInfoText').innerHTML =
+          `<strong>${escapeHtml(shop.name)}</strong> <span class="muted">${escapeHtml(shop.plan?.displayName ?? '')}</span>`;
       } catch (err) {
         console.error('Failed to load shop info', err);
       }
     }
+
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      searchTerm = e.target.value.trim().toLowerCase();
+      renderGrid();
+    });
 
     loadTemplates();
     loadShopInfo();

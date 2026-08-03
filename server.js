@@ -56,34 +56,86 @@ app.get('/api/sections', (_req, res) => {
   );
 });
 
-app.get('/api/sections/:id/install-link', requireShopifySession, async (req, res) => {
-  const handle = THEME_APP_BLOCKS[req.params.id];
-  if (!handle) {
-    return res.status(404).json({ error: 'This section is not available to install yet' });
-  }
-
+app.get('/api/themes', requireShopifySession, async (req, res) => {
   try {
     const shopify = getShopify();
     const client = new shopify.clients.Graphql({ session: req.shopifySession });
 
     const themeResult = await client.request(`
       query {
-        themes(first: 1, roles: [MAIN]) {
-          nodes { id name }
+        themes(first: 20, roles: [MAIN, UNPUBLISHED]) {
+          nodes { id name role }
         }
       }
     `);
-    const theme = themeResult.data.themes.nodes[0];
-    if (!theme) {
-      return res.status(404).json({ error: 'No published theme found on this store' });
+
+    const themes = themeResult.data.themes.nodes
+      .map((theme) => ({
+        id: theme.id.split('/').pop(),
+        name: theme.name,
+        role: theme.role
+      }))
+      .sort((a, b) => (a.role === 'MAIN' ? -1 : b.role === 'MAIN' ? 1 : 0));
+
+    res.json({ themes });
+  } catch (err) {
+    console.error('Themes list error:', err.message);
+    res.status(502).json({ error: 'Failed to reach Shopify Admin API' });
+  }
+});
+
+app.get('/api/sections/:id/install-link', requireShopifySession, async (req, res) => {
+  const handle = THEME_APP_BLOCKS[req.params.id];
+  if (!handle) {
+    return res.status(404).json({ error: 'This section is not available to install yet' });
+  }
+
+  const requestedThemeId = typeof req.query.themeId === 'string' ? req.query.themeId : '';
+  if (requestedThemeId && !/^\d+$/.test(requestedThemeId)) {
+    return res.status(400).json({ error: 'Invalid theme id' });
+  }
+
+  try {
+    const shopify = getShopify();
+    const client = new shopify.clients.Graphql({ session: req.shopifySession });
+
+    let themeIdNumeric = requestedThemeId;
+    let themeName;
+
+    if (themeIdNumeric) {
+      const themeResult = await client.request(
+        `
+          query GetTheme($id: ID!) {
+            theme(id: $id) { id name }
+          }
+        `,
+        { variables: { id: `gid://shopify/OnlineStoreTheme/${themeIdNumeric}` } }
+      );
+      if (!themeResult.data.theme) {
+        return res.status(404).json({ error: 'Theme not found' });
+      }
+      themeName = themeResult.data.theme.name;
+    } else {
+      const themeResult = await client.request(`
+        query {
+          themes(first: 1, roles: [MAIN]) {
+            nodes { id name }
+          }
+        }
+      `);
+      const theme = themeResult.data.themes.nodes[0];
+      if (!theme) {
+        return res.status(404).json({ error: 'No published theme found on this store' });
+      }
+      themeIdNumeric = theme.id.split('/').pop();
+      themeName = theme.name;
     }
-    const themeIdNumeric = theme.id.split('/').pop();
 
     const editorUrl =
       `https://${req.shopifySession.shop}/admin/themes/${themeIdNumeric}/editor` +
       `?template=index&addAppBlockId=${process.env.SHOPIFY_API_KEY}/${handle}&target=newAppsSection`;
 
-    res.json({ ok: true, theme: theme.name, editorUrl });
+    res.json({ ok: true, theme: themeName, editorUrl });
   } catch (err) {
     console.error('Section install-link error:', err.message);
     res.status(502).json({ error: 'Failed to reach Shopify Admin API' });
