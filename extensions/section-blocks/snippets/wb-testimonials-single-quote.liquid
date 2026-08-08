@@ -1,0 +1,19 @@
+{% comment %} Renders the single-quote design for wb-testimonials.liquid {% endcomment %}
+<div class="wb-testimonials wb-testimonials--single-quote" style="background-color: {{ block.settings.background_color }}; color: {{ block.settings.text_color }};">
+  {% if block.settings.heading != blank %}
+    <h2 class="wb-testimonials__heading">{{ block.settings.heading }}</h2>
+  {% endif %}
+  <blockquote class="wb-testimonials__quote">
+    {% if block.settings.quote != blank %}
+      <p class="wb-testimonials__quote-text">&ldquo;{{ block.settings.quote }}&rdquo;</p>
+    {% endif %}
+    {% if block.settings.author != blank %}
+      <cite class="wb-testimonials__author">
+        {{ block.settings.author }}
+        {% if block.settings.author_role != blank %}
+          <span class="wb-testimonials__author-role">{{ block.settings.author_role }}</span>
+        {% endif %}
+      </cite>
+    {% endif %}
+  </blockquote>
+</div>

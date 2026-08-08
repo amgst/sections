@@ -14,135 +14,20 @@ app.get('/healthz', (_req, res) => {
   res.json({ ok: true, service: 'shopify-section-app' });
 });
 
-const SECTION_CATALOG = [
-  {
-    id: 'hero-banner',
-    name: 'Hero Banner',
-    category: 'Hero',
-    price: 'Free',
-    description: 'High-converting hero area for promos and launches.',
-    tags: ['popular', 'trending', 'hero']
-  },
-  {
-    id: 'product-grid',
-    name: 'Product Grid',
-    category: 'Features',
-    price: 'Pro',
-    description: 'Flexible product showcase with quick add buttons.',
-    tags: ['popular', 'trending', 'features']
-  },
-  {
-    id: 'testimonials',
-    name: 'Testimonials',
-    category: 'Testimonial',
-    price: 'Free',
-    description: 'Customer review block to boost trust.',
-    tags: ['trending', 'testimonial', 'free']
-  },
-  {
-    id: 'video-showcase',
-    name: 'Video Showcase',
-    category: 'Video',
-    price: 'Pro',
-    description: 'Autoplaying product video with tappable hotspots.',
-    tags: ['trending', 'video']
-  },
-  {
-    id: 'comparison-table',
-    name: 'Comparison Table',
-    category: 'Features',
-    price: 'Pro',
-    description: 'Side-by-side plan or product comparison grid.',
-    tags: ['trending', 'features']
-  },
-  {
-    id: 'sticky-cart',
-    name: 'Sticky Add-to-cart',
-    category: 'Features',
-    price: 'Pro',
-    description: 'Persistent bar that keeps checkout one tap away.',
-    tags: ['trending', 'popular', 'features']
-  },
-  {
-    id: 'countdown-bar',
-    name: 'Countdown Bar',
-    category: 'Countdown',
-    price: 'Free',
-    description: 'Urgency banner with a live sale countdown timer.',
-    tags: ['newest', 'countdown', 'free']
-  },
-  {
-    id: 'announcement-scroller',
-    name: 'Announcement Scroller',
-    category: 'Scrolling',
-    price: 'Free',
-    description: 'Marquee strip for shipping perks and promo codes.',
-    tags: ['newest', 'scrolling', 'free']
-  },
-  {
-    id: 'image-collage',
-    name: 'Image Collage',
-    category: 'Images',
-    price: 'Free',
-    description: 'Editorial-style grid for lookbook and lifestyle shots.',
-    tags: ['newest', 'images', 'free']
-  },
-  {
-    id: 'newsletter-signup',
-    name: 'Newsletter Signup',
-    category: 'Snippet',
-    price: 'Free',
-    description: 'Email capture block with a discount code reveal.',
-    tags: ['newest', 'snippet', 'free']
-  },
-  {
-    id: 'faq-accordion',
-    name: 'FAQ Accordion',
-    category: 'Snippet',
-    price: 'Free',
-    description: 'Collapsible question list to cut support tickets.',
-    tags: ['newest', 'snippet', 'free']
-  },
-  {
-    id: 'text-banner',
-    name: 'Text Banner',
-    category: 'Text',
-    price: 'Free',
-    description: 'Bold statement strip for brand values or press logos.',
-    tags: ['newest', 'text', 'free']
-  },
-  {
-    id: 'feature-grid',
-    name: 'Feature Grid',
-    category: 'Features',
-    price: 'Free',
-    description: 'Icon-led grid to explain product benefits at a glance.',
-    tags: ['popular', 'features', 'free']
-  },
-  {
-    id: 'footer-links',
-    name: 'Footer Links Pro',
-    category: 'Snippet',
-    price: 'Free',
-    description: 'Multi-column footer with socials and trust badges.',
-    tags: ['popular', 'snippet', 'free']
-  }
-];
+const SECTION_CATALOG = require('./data/section-catalog');
 
-// App block handles from extensions/section-blocks/blocks/*.liquid, added to the theme
-// via a deep link into the theme editor (direct theme-file writes require a Shopify
-// exemption regular apps don't have — see themeFilesUpsert's write_themes restriction).
-const THEME_APP_BLOCKS = {
-  'hero-banner': 'wb-hero-banner',
-  'product-grid': 'wb-product-grid',
-  'testimonials': 'wb-testimonials'
-};
+// Block types actually shipped as .liquid files in extensions/section-blocks/blocks/
+// (capped at 30 total by Shopify's Theme App Extension limit — see data/section-catalog.js
+// for how many catalog "designs" a single handle can represent). Direct theme-file writes
+// are not a workaround: themeFilesUpsert needs write_themes plus a Shopify-granted exemption
+// regular apps don't have.
+const REGISTERED_BLOCK_HANDLES = new Set(['wb-hero-banner', 'wb-product-grid', 'wb-testimonials']);
 
 app.get('/api/sections', (_req, res) => {
   res.json(
     SECTION_CATALOG.map((section) => ({
       ...section,
-      installable: Boolean(THEME_APP_BLOCKS[section.id])
+      installable: Boolean(section.block && REGISTERED_BLOCK_HANDLES.has(section.block.handle))
     }))
   );
 });
@@ -176,10 +61,11 @@ app.get('/api/themes', requireShopifySession, async (req, res) => {
 });
 
 app.get('/api/sections/:id/install-link', requireShopifySession, async (req, res) => {
-  const handle = THEME_APP_BLOCKS[req.params.id];
-  if (!handle) {
+  const section = SECTION_CATALOG.find((s) => s.id === req.params.id);
+  if (!section || !section.block || !REGISTERED_BLOCK_HANDLES.has(section.block.handle)) {
     return res.status(404).json({ error: 'This section is not available to install yet' });
   }
+  const handle = section.block.handle;
 
   const requestedThemeId = typeof req.query.themeId === 'string' ? req.query.themeId : '';
   if (requestedThemeId && !/^\d+$/.test(requestedThemeId)) {
@@ -226,7 +112,13 @@ app.get('/api/sections/:id/install-link', requireShopifySession, async (req, res
       `https://${req.shopifySession.shop}/admin/themes/${themeIdNumeric}/editor` +
       `?template=index&addAppBlockId=${process.env.SHOPIFY_API_KEY}/${handle}&target=newAppsSection`;
 
-    res.json({ ok: true, theme: themeName, editorUrl });
+    res.json({
+      ok: true,
+      theme: themeName,
+      editorUrl,
+      design: section.block.design,
+      designLabel: section.block.designLabel
+    });
   } catch (err) {
     console.error('Section install-link error:', err.message);
     res.status(502).json({ error: 'Failed to reach Shopify Admin API' });

@@ -1,10 +1,15 @@
+/* Base — shared by every wb-hero design */
 .wb-hero {
   text-align: center;
+  position: relative;
+  overflow: hidden;
 }
 .wb-hero__inner {
   max-width: 720px;
   margin: 0 auto;
   padding: 0 24px;
+  position: relative;
+  z-index: 1;
 }
 .wb-hero__heading {
   font-size: 2.5rem;
@@ -15,10 +20,84 @@
   margin: 0 0 24px;
   opacity: 0.85;
 }
-.wb-hero__button {
+
+/* Modifier — split-image */
+.wb-hero--split-image {
+  text-align: left;
+}
+.wb-hero__split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 40px;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.wb-hero--image-left .wb-hero__split-media {
+  order: -1;
+}
+.wb-hero__split-image {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  display: block;
+}
+.wb-hero__split-placeholder {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  background: rgba(127, 127, 127, 0.15);
+}
+@media (max-width: 749px) {
+  .wb-hero__split {
+    grid-template-columns: 1fr;
+  }
+  .wb-hero--image-left .wb-hero__split-media {
+    order: 0;
+  }
+}
+
+/* Modifier — video-background */
+.wb-hero--video-background {
+  color: #ffffff;
+}
+.wb-hero__video-wrap {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+}
+.wb-hero__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.wb-hero__video-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+/* Modifier — minimal-text */
+.wb-hero--minimal-text .wb-hero__inner--minimal {
+  max-width: 560px;
+}
+.wb-hero__heading--minimal {
+  font-size: 1.75rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.wb-hero__button--minimal {
+  background: none !important;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Modifier — announcement-overlay */
+.wb-hero__badge {
   display: inline-block;
-  padding: 12px 28px;
-  border-radius: 999px;
-  text-decoration: none;
-  font-weight: 600;
 }

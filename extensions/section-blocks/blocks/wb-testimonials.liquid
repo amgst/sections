@@ -1,35 +1,15 @@
-<div class="wb-testimonials" style="background-color: {{ block.settings.background_color }}; color: {{ block.settings.text_color }};">
-  {% if block.settings.heading != blank %}
-    <h2 class="wb-testimonials__heading">{{ block.settings.heading }}</h2>
-  {% endif %}
+{{ 'wb-common.css' | asset_url | stylesheet_tag }}
 
-  <div class="wb-testimonials__grid">
-    {% if block.settings.testimonial_1_quote != blank %}
-      <blockquote class="wb-testimonials__card">
-        <p>&ldquo;{{ block.settings.testimonial_1_quote }}&rdquo;</p>
-        {% if block.settings.testimonial_1_author != blank %}
-          <cite>{{ block.settings.testimonial_1_author }}</cite>
-        {% endif %}
-      </blockquote>
-    {% endif %}
-    {% if block.settings.testimonial_2_quote != blank %}
-      <blockquote class="wb-testimonials__card">
-        <p>&ldquo;{{ block.settings.testimonial_2_quote }}&rdquo;</p>
-        {% if block.settings.testimonial_2_author != blank %}
-          <cite>{{ block.settings.testimonial_2_author }}</cite>
-        {% endif %}
-      </blockquote>
-    {% endif %}
-    {% if block.settings.testimonial_3_quote != blank %}
-      <blockquote class="wb-testimonials__card">
-        <p>&ldquo;{{ block.settings.testimonial_3_quote }}&rdquo;</p>
-        {% if block.settings.testimonial_3_author != blank %}
-          <cite>{{ block.settings.testimonial_3_author }}</cite>
-        {% endif %}
-      </blockquote>
-    {% endif %}
-  </div>
-</div>
+{% case block.settings.design %}
+  {% when 'quote-with-photo' %}
+    {% render 'wb-testimonials-quote-photo', block: block %}
+  {% when 'stat-highlight' %}
+    {% render 'wb-testimonials-stat-highlight', block: block %}
+  {% when 'video-testimonial' %}
+    {% render 'wb-testimonials-video', block: block %}
+  {% else %}
+    {% render 'wb-testimonials-single-quote', block: block %}
+{% endcase %}
 
 {% schema %}
 {
@@ -37,18 +17,45 @@
   "target": "section",
   "stylesheet": "wb-testimonials.css",
   "settings": [
+    {
+      "type": "select",
+      "id": "design",
+      "label": "Design",
+      "default": "single-quote",
+      "options": [
+        { "value": "single-quote", "label": "Single quote" },
+        { "value": "quote-with-photo", "label": "Quote with photo" },
+        { "value": "stat-highlight", "label": "Stat highlight" },
+        { "value": "video-testimonial", "label": "Video testimonial" }
+      ]
+    },
+    { "type": "header", "content": "Content" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "What our customers say" },
-    { "type": "header", "content": "Testimonial 1" },
-    { "type": "textarea", "id": "testimonial_1_quote", "label": "Quote", "default": "This app made adding new sections so easy." },
-    { "type": "text", "id": "testimonial_1_author", "label": "Author", "default": "Happy merchant" },
-    { "type": "header", "content": "Testimonial 2" },
-    { "type": "textarea", "id": "testimonial_2_quote", "label": "Quote" },
-    { "type": "text", "id": "testimonial_2_author", "label": "Author" },
-    { "type": "header", "content": "Testimonial 3" },
-    { "type": "textarea", "id": "testimonial_3_quote", "label": "Quote" },
-    { "type": "text", "id": "testimonial_3_author", "label": "Author" },
+    { "type": "textarea", "id": "quote", "label": "Quote", "default": "This app made adding new sections so easy." },
+    { "type": "text", "id": "author", "label": "Author", "default": "Happy merchant" },
+    { "type": "text", "id": "author_role", "label": "Author role or store name" },
+
+    { "type": "header", "content": "Colors" },
     { "type": "color", "id": "background_color", "label": "Background color", "default": "#f9fafb" },
-    { "type": "color", "id": "text_color", "label": "Text color", "default": "#111827" }
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#111827" },
+    { "type": "color", "id": "accent_color", "label": "Accent color", "default": "#008060" },
+
+    { "type": "header", "content": "Quote with photo design", "visible_if": "{{ block.settings.design == 'quote-with-photo' }}" },
+    { "type": "image_picker", "id": "author_photo", "label": "Author photo", "visible_if": "{{ block.settings.design == 'quote-with-photo' }}" },
+
+    { "type": "header", "content": "Stat highlight design", "visible_if": "{{ block.settings.design == 'stat-highlight' }}" },
+    { "type": "text", "id": "stat_value", "label": "Stat value", "default": "4.9/5", "visible_if": "{{ block.settings.design == 'stat-highlight' }}" },
+    { "type": "text", "id": "stat_label", "label": "Stat label", "default": "Average rating", "visible_if": "{{ block.settings.design == 'stat-highlight' }}" },
+
+    { "type": "header", "content": "Video testimonial design", "visible_if": "{{ block.settings.design == 'video-testimonial' }}" },
+    { "type": "video", "id": "testimonial_video", "label": "Testimonial video", "visible_if": "{{ block.settings.design == 'video-testimonial' }}" },
+    { "type": "image_picker", "id": "video_poster", "label": "Poster image", "visible_if": "{{ block.settings.design == 'video-testimonial' }}" }
+  ],
+  "presets": [
+    { "name": "Testimonial — Single quote", "category": "Testimonial", "settings": { "design": "single-quote" } },
+    { "name": "Testimonial — Quote with photo", "category": "Testimonial", "settings": { "design": "quote-with-photo" } },
+    { "name": "Testimonial — Stat highlight", "category": "Testimonial", "settings": { "design": "stat-highlight" } },
+    { "name": "Testimonial — Video testimonial", "category": "Testimonial", "settings": { "design": "video-testimonial" } }
   ]
 }
 {% endschema %}

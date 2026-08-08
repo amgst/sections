@@ -1,0 +1,22 @@
+{% comment %} Renders the stat-highlight design for wb-testimonials.liquid {% endcomment %}
+<div class="wb-testimonials wb-testimonials--stat-highlight" style="background-color: {{ block.settings.background_color }}; color: {{ block.settings.text_color }};">
+  {% if block.settings.heading != blank %}
+    <h2 class="wb-testimonials__heading">{{ block.settings.heading }}</h2>
+  {% endif %}
+  <div class="wb-testimonials__stat-card">
+    {% if block.settings.stat_value != blank %}
+      <div class="wb-testimonials__stat-value" style="color: {{ block.settings.accent_color }};">{{ block.settings.stat_value }}</div>
+    {% endif %}
+    {% if block.settings.stat_label != blank %}
+      <div class="wb-testimonials__stat-label">{{ block.settings.stat_label }}</div>
+    {% endif %}
+    <blockquote class="wb-testimonials__quote">
+      {% if block.settings.quote != blank %}
+        <p class="wb-testimonials__quote-text">&ldquo;{{ block.settings.quote }}&rdquo;</p>
+      {% endif %}
+      {% if block.settings.author != blank %}
+        <cite class="wb-testimonials__author">{{ block.settings.author }}</cite>
+      {% endif %}
+    </blockquote>
+  </div>
+</div>

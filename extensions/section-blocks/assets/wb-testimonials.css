@@ -1,3 +1,4 @@
+/* Base — shared by every wb-testimonials design */
 .wb-testimonials {
   padding: 48px 24px;
   text-align: center;
@@ -6,26 +7,79 @@
   font-size: 2rem;
   margin: 0 0 28px;
 }
-.wb-testimonials__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-.wb-testimonials__card {
+.wb-testimonials__quote {
   margin: 0;
-  padding: 24px;
-  border-radius: 14px;
-  background: rgba(0, 0, 0, 0.03);
-  text-align: left;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
 }
-.wb-testimonials__card p {
+.wb-testimonials__quote-text {
   margin: 0 0 12px;
   line-height: 1.6;
+  font-size: 1.1rem;
 }
-.wb-testimonials__card cite {
+.wb-testimonials__author {
   font-style: normal;
   font-weight: 600;
   opacity: 0.8;
+}
+.wb-testimonials__author-role {
+  display: block;
+  font-weight: 400;
+  font-size: 0.9em;
+  opacity: 0.75;
+}
+
+/* Modifier — quote-with-photo */
+.wb-testimonials__photo-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.wb-testimonials__photo,
+.wb-testimonials__photo-placeholder {
+  width: 72px;
+  height: 72px;
+  border-radius: 999px;
+  object-fit: cover;
+}
+.wb-testimonials__photo-placeholder {
+  background: rgba(127, 127, 127, 0.2);
+}
+
+/* Modifier — stat-highlight */
+.wb-testimonials__stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.wb-testimonials__stat-value {
+  font-size: 2.75rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.wb-testimonials__stat-label {
+  font-size: 0.95rem;
+  opacity: 0.75;
+  margin-bottom: 20px;
+}
+
+/* Modifier — video */
+.wb-testimonials__video-card {
+  max-width: 560px;
+  margin: 0 auto;
+}
+.wb-testimonials__video-wrap {
+  border-radius: 14px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  margin-bottom: 16px;
+}
+.wb-testimonials__video {
+  width: 100%;
+  height: auto;
+  display: block;
 }

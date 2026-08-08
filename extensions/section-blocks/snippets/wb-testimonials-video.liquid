@@ -1,0 +1,28 @@
+{% comment %} Renders the video-testimonial design for wb-testimonials.liquid {% endcomment %}
+<div class="wb-testimonials wb-testimonials--video" style="background-color: {{ block.settings.background_color }}; color: {{ block.settings.text_color }};">
+  {% if block.settings.heading != blank %}
+    <h2 class="wb-testimonials__heading">{{ block.settings.heading }}</h2>
+  {% endif %}
+  <div class="wb-testimonials__video-card">
+    <div
+      class="wb-testimonials__video-wrap"
+      {% if block.settings.video_poster != blank %}
+        style="background-image: url({{ block.settings.video_poster | image_url: width: 800 }});"
+      {% endif %}
+    >
+      {% if block.settings.testimonial_video != blank %}
+        {{ block.settings.testimonial_video | video_tag: controls: true, class: 'wb-testimonials__video' }}
+      {% endif %}
+    </div>
+    {% if block.settings.quote != blank or block.settings.author != blank %}
+      <blockquote class="wb-testimonials__quote">
+        {% if block.settings.quote != blank %}
+          <p class="wb-testimonials__quote-text">&ldquo;{{ block.settings.quote }}&rdquo;</p>
+        {% endif %}
+        {% if block.settings.author != blank %}
+          <cite class="wb-testimonials__author">{{ block.settings.author }}</cite>
+        {% endif %}
+      </blockquote>
+    {% endif %}
+  </div>
+</div>

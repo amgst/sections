@@ -1,0 +1,26 @@
+{% comment %} Renders the quote-with-photo design for wb-testimonials.liquid {% endcomment %}
+<div class="wb-testimonials wb-testimonials--quote-photo" style="background-color: {{ block.settings.background_color }}; color: {{ block.settings.text_color }};">
+  {% if block.settings.heading != blank %}
+    <h2 class="wb-testimonials__heading">{{ block.settings.heading }}</h2>
+  {% endif %}
+  <div class="wb-testimonials__photo-card">
+    {% if block.settings.author_photo != blank %}
+      {{ block.settings.author_photo | image_url: width: 160 | image_tag: loading: 'lazy', class: 'wb-testimonials__photo' }}
+    {% else %}
+      <div class="wb-testimonials__photo-placeholder" aria-hidden="true"></div>
+    {% endif %}
+    <blockquote class="wb-testimonials__quote">
+      {% if block.settings.quote != blank %}
+        <p class="wb-testimonials__quote-text">&ldquo;{{ block.settings.quote }}&rdquo;</p>
+      {% endif %}
+      {% if block.settings.author != blank %}
+        <cite class="wb-testimonials__author">
+          {{ block.settings.author }}
+          {% if block.settings.author_role != blank %}
+            <span class="wb-testimonials__author-role">{{ block.settings.author_role }}</span>
+          {% endif %}
+        </cite>
+      {% endif %}
+    </blockquote>
+  </div>
+</div>
