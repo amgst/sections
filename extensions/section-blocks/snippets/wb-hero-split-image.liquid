@@ -1,8 +1,5 @@
 {% comment %} Renders the split-image design for wb-hero-banner.liquid {% endcomment %}
-<div
-  class="wb-hero wb-hero--split-image wb-hero--image-{{ block.settings.split_image_position }}"
-  style="background-color: {{ block.settings.background_color }}; color: {{ block.settings.text_color }}; padding-top: {{ block.settings.padding_top }}px; padding-bottom: {{ block.settings.padding_bottom }}px;"
->
+<div class="wb-hero wb-hero--split-image wb-hero--image-{{ block.settings.split_image_position }} wb-hero-{{ block.id }}">
   <div class="wb-hero__split">
     <div class="wb-hero__split-media">
       {% if block.settings.split_image != blank %}
@@ -19,11 +16,7 @@
         <p class="wb-hero__subheading">{{ block.settings.subheading }}</p>
       {% endif %}
       {% if block.settings.button_label != blank %}
-        <a
-          href="{{ block.settings.button_link }}"
-          class="wb-hero__button wb-btn"
-          style="background-color: {{ block.settings.button_background }}; color: {{ block.settings.button_text_color }};"
-        >
+        <a href="{{ block.settings.button_link }}" class="wb-hero__button wb-btn">
           {{ block.settings.button_label }}
         </a>
       {% endif %}

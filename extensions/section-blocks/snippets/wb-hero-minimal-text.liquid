@@ -1,18 +1,11 @@
 {% comment %} Renders the minimal-text design for wb-hero-banner.liquid {% endcomment %}
-<div
-  class="wb-hero wb-hero--minimal-text"
-  style="background-color: {{ block.settings.background_color }}; color: {{ block.settings.text_color }}; padding-top: {{ block.settings.padding_top }}px; padding-bottom: {{ block.settings.padding_bottom }}px;"
->
+<div class="wb-hero wb-hero--minimal-text wb-hero-{{ block.id }}">
   <div class="wb-hero__inner wb-hero__inner--minimal">
     {% if block.settings.heading != blank %}
       <h2 class="wb-hero__heading wb-hero__heading--minimal">{{ block.settings.heading }}</h2>
     {% endif %}
     {% if block.settings.button_label != blank %}
-      <a
-        href="{{ block.settings.button_link }}"
-        class="wb-hero__button wb-hero__button--minimal wb-btn"
-        style="color: {{ block.settings.button_background }};"
-      >
+      <a href="{{ block.settings.button_link }}" class="wb-hero__button wb-hero__button--minimal wb-btn">
         {{ block.settings.button_label }}
       </a>
     {% endif %}

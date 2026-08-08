@@ -1,8 +1,5 @@
 {% comment %} Renders the video-background design for wb-hero-banner.liquid {% endcomment %}
-<div
-  class="wb-hero wb-hero--video-background"
-  style="color: {{ block.settings.text_color }}; padding-top: {{ block.settings.padding_top }}px; padding-bottom: {{ block.settings.padding_bottom }}px;"
->
+<div class="wb-hero wb-hero--video-background wb-hero-{{ block.id }}">
   <div
     class="wb-hero__video-wrap"
     {% if block.settings.bg_video_poster != blank %}
@@ -22,11 +19,7 @@
       <p class="wb-hero__subheading">{{ block.settings.subheading }}</p>
     {% endif %}
     {% if block.settings.button_label != blank %}
-      <a
-        href="{{ block.settings.button_link }}"
-        class="wb-hero__button wb-btn"
-        style="background-color: {{ block.settings.button_background }}; color: {{ block.settings.button_text_color }};"
-      >
+      <a href="{{ block.settings.button_link }}" class="wb-hero__button wb-btn">
         {{ block.settings.button_label }}
       </a>
     {% endif %}
