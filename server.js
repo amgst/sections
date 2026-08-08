@@ -18,23 +18,114 @@ const SECTION_CATALOG = [
   {
     id: 'hero-banner',
     name: 'Hero Banner',
-    category: 'Marketing',
+    category: 'Hero',
     price: 'Free',
-    description: 'High-converting hero area for promos and launches.'
+    description: 'High-converting hero area for promos and launches.',
+    tags: ['popular', 'trending', 'hero']
   },
   {
     id: 'product-grid',
     name: 'Product Grid',
-    category: 'Storefront',
+    category: 'Features',
     price: 'Pro',
-    description: 'Flexible product showcase with quick add buttons.'
+    description: 'Flexible product showcase with quick add buttons.',
+    tags: ['popular', 'trending', 'features']
   },
   {
     id: 'testimonials',
     name: 'Testimonials',
-    category: 'Social Proof',
+    category: 'Testimonial',
     price: 'Free',
-    description: 'Customer review block to boost trust.'
+    description: 'Customer review block to boost trust.',
+    tags: ['trending', 'testimonial', 'free']
+  },
+  {
+    id: 'video-showcase',
+    name: 'Video Showcase',
+    category: 'Video',
+    price: 'Pro',
+    description: 'Autoplaying product video with tappable hotspots.',
+    tags: ['trending', 'video']
+  },
+  {
+    id: 'comparison-table',
+    name: 'Comparison Table',
+    category: 'Features',
+    price: 'Pro',
+    description: 'Side-by-side plan or product comparison grid.',
+    tags: ['trending', 'features']
+  },
+  {
+    id: 'sticky-cart',
+    name: 'Sticky Add-to-cart',
+    category: 'Features',
+    price: 'Pro',
+    description: 'Persistent bar that keeps checkout one tap away.',
+    tags: ['trending', 'popular', 'features']
+  },
+  {
+    id: 'countdown-bar',
+    name: 'Countdown Bar',
+    category: 'Countdown',
+    price: 'Free',
+    description: 'Urgency banner with a live sale countdown timer.',
+    tags: ['newest', 'countdown', 'free']
+  },
+  {
+    id: 'announcement-scroller',
+    name: 'Announcement Scroller',
+    category: 'Scrolling',
+    price: 'Free',
+    description: 'Marquee strip for shipping perks and promo codes.',
+    tags: ['newest', 'scrolling', 'free']
+  },
+  {
+    id: 'image-collage',
+    name: 'Image Collage',
+    category: 'Images',
+    price: 'Free',
+    description: 'Editorial-style grid for lookbook and lifestyle shots.',
+    tags: ['newest', 'images', 'free']
+  },
+  {
+    id: 'newsletter-signup',
+    name: 'Newsletter Signup',
+    category: 'Snippet',
+    price: 'Free',
+    description: 'Email capture block with a discount code reveal.',
+    tags: ['newest', 'snippet', 'free']
+  },
+  {
+    id: 'faq-accordion',
+    name: 'FAQ Accordion',
+    category: 'Snippet',
+    price: 'Free',
+    description: 'Collapsible question list to cut support tickets.',
+    tags: ['newest', 'snippet', 'free']
+  },
+  {
+    id: 'text-banner',
+    name: 'Text Banner',
+    category: 'Text',
+    price: 'Free',
+    description: 'Bold statement strip for brand values or press logos.',
+    tags: ['newest', 'text', 'free']
+  },
+  {
+    id: 'feature-grid',
+    name: 'Feature Grid',
+    category: 'Features',
+    price: 'Free',
+    description: 'Icon-led grid to explain product benefits at a glance.',
+    tags: ['popular', 'features', 'free']
+  },
+  {
+    id: 'footer-links',
+    name: 'Footer Links Pro',
+    category: 'Snippet',
+    price: 'Free',
+    description: 'Multi-column footer with socials and trust badges.',
+    tags: ['popular', 'snippet', 'free']
   }
 ];
 

@@ -32,7 +32,7 @@
       -webkit-font-smoothing: antialiased;
     }
     .shell {
-      max-width: 1120px;
+      max-width: 1200px;
       margin: 0 auto;
       padding: 24px 20px 56px;
     }
@@ -44,18 +44,36 @@
       justify-content: space-between;
       gap: 16px;
       flex-wrap: wrap;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
+    }
+    .topbar .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .topbar .brand-mark {
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
+      background: var(--text);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
     }
     .topbar h1 {
       margin: 0;
-      font-size: 20px;
+      font-size: 19px;
       font-weight: 650;
       letter-spacing: -.01em;
     }
     .topbar p {
       margin: 2px 0 0;
       color: var(--text-subdued);
-      font-size: 13px;
+      font-size: 12.5px;
     }
     .shop-chip {
       display: none;
@@ -82,12 +100,12 @@
     .toolbar {
       display: flex;
       gap: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 14px;
       flex-wrap: wrap;
     }
     .search-box {
       position: relative;
-      flex: 1 1 240px;
+      flex: 1 1 260px;
     }
     .search-box svg {
       position: absolute;
@@ -99,7 +117,7 @@
     }
     .search-box input {
       width: 100%;
-      padding: 10px 12px 10px 36px;
+      padding: 11px 12px 11px 36px;
       border-radius: 9px;
       border: 1px solid var(--border);
       background: var(--surface);
@@ -112,14 +130,44 @@
       border-color: var(--green);
       box-shadow: 0 0 0 3px var(--green-tint);
     }
-    .chip-row {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-    .chip {
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
       border: 1px solid var(--border);
       background: var(--surface);
+      color: var(--text);
+      border-radius: 9px;
+      padding: 0 14px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background .12s, border-color .12s;
+    }
+    .btn-secondary:hover { background: var(--bg); }
+    .btn-secondary.active {
+      background: var(--text);
+      border-color: var(--text);
+      color: #fff;
+    }
+
+    /* Category dropdown panel */
+    .category-panel {
+      display: none;
+      flex-wrap: wrap;
+      gap: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow);
+    }
+    .category-panel.open { display: flex; }
+    .chip {
+      border: 1px solid var(--border);
+      background: var(--bg);
       color: var(--text);
       border-radius: 999px;
       padding: 8px 14px;
@@ -136,17 +184,116 @@
       color: #fff;
     }
 
-    /* Grid */
+    /* Icon strip */
+    .icon-strip-wrap {
+      position: relative;
+      margin-bottom: 24px;
+    }
+    .icon-strip {
+      display: flex;
+      gap: 22px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding: 4px 36px 4px 2px;
+    }
+    .icon-strip::-webkit-scrollbar { display: none; }
+    .icon-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      flex-shrink: 0;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 2px;
+    }
+    .icon-item .icon-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-subdued);
+      transition: border-color .12s, background .12s, color .12s;
+    }
+    .icon-item:hover .icon-circle { border-color: #c9cccf; }
+    .icon-item.active .icon-circle {
+      background: var(--text);
+      border-color: var(--text);
+      color: #fff;
+    }
+    .icon-item.active { color: var(--text); font-weight: 650; }
+    .icon-scroll-btn {
+      position: absolute;
+      right: 0;
+      top: 2px;
+      width: 30px;
+      height: 40px;
+      border: none;
+      background: linear-gradient(90deg, transparent, var(--bg) 40%);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      cursor: pointer;
+      color: var(--text-subdued);
+    }
+
+    /* Section rows */
+    .row-section { margin-bottom: 30px; }
+    .row-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .row-head h2 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 650;
+    }
+    .row-head button {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text);
+    }
+    .row-head button:hover { background: var(--bg); }
+    .card-row {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 4px;
+    }
+    .card-row::-webkit-scrollbar { display: none; }
+    .card-row .card { flex: 0 0 240px; }
+
+    /* Grid (used for filtered / search results) */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
       gap: 14px;
     }
+
+    /* Cards */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 18px;
+      overflow: hidden;
       box-shadow: var(--shadow);
       display: flex;
       flex-direction: column;
@@ -156,49 +303,81 @@
       box-shadow: 0 2px 4px rgba(26,28,29,.08), 0 4px 14px rgba(26,28,29,.08);
       transform: translateY(-1px);
     }
-    .card-top {
+    .card-preview {
+      position: relative;
+      height: 128px;
       display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 10px;
+      align-items: flex-end;
+      padding: 12px;
+      overflow: hidden;
     }
-    .pill {
+    .card-preview .pill {
+      position: relative;
+      z-index: 1;
       display: inline-block;
-      background: #eef1f2;
-      color: #4a4e51;
+      background: rgba(255,255,255,.9);
+      color: #2a2c2e;
       padding: 4px 10px;
       border-radius: 999px;
-      font-size: 11.5px;
-      font-weight: 600;
+      font-size: 11px;
+      font-weight: 650;
       letter-spacing: .01em;
-      text-transform: uppercase;
+    }
+    .card-preview .mock-lines {
+      position: absolute;
+      inset: 14px 14px auto 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .card-preview .mock-lines span {
+      display: block;
+      height: 7px;
+      border-radius: 4px;
+      background: rgba(255,255,255,.55);
+    }
+    .card-preview .mock-lines span:nth-child(1) { width: 55%; }
+    .card-preview .mock-lines span:nth-child(2) { width: 80%; height: 4px; opacity: .7; }
+
+    .card-body {
+      padding: 12px 14px 14px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .card-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 2px;
+    }
+    .card h3 {
+      margin: 0;
+      font-size: 14.5px;
+      font-weight: 650;
     }
     .price-tag {
       font-size: 11.5px;
       font-weight: 700;
-      padding: 4px 9px;
+      padding: 3px 9px;
       border-radius: 6px;
       white-space: nowrap;
+      flex-shrink: 0;
     }
     .price-tag.free { background: var(--green-tint); color: var(--green-dark); }
     .price-tag.pro { background: var(--gold-tint); color: var(--gold-text); }
 
-    .card h3 {
-      margin: 0 0 6px;
-      font-size: 16px;
-      font-weight: 650;
-    }
     .card p.desc {
-      margin: 0;
+      margin: 4px 0 0;
       color: var(--text-subdued);
-      font-size: 13.5px;
+      font-size: 12.5px;
       line-height: 1.5;
       flex-grow: 1;
     }
 
     .install-btn {
-      margin-top: 16px;
+      margin-top: 12px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -206,9 +385,9 @@
       border: none;
       background: var(--green);
       color: white;
-      padding: 9px 14px;
+      padding: 8px 14px;
       border-radius: 8px;
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       transition: background .12s;
@@ -229,8 +408,8 @@
     @keyframes spin { to { transform: rotate(360deg); } }
 
     .coming-soon {
-      margin-top: 16px;
-      font-size: 12.5px;
+      margin-top: 12px;
+      font-size: 12px;
       color: var(--text-subdued);
       font-style: italic;
     }
@@ -238,7 +417,7 @@
     .install-status {
       display: block;
       margin-top: 8px;
-      font-size: 12.5px;
+      font-size: 12px;
       line-height: 1.4;
     }
     .install-status.error { color: var(--red-text); }
@@ -250,9 +429,18 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 18px;
+      padding: 0;
       box-shadow: var(--shadow);
+      overflow: hidden;
+      flex: 0 0 240px;
     }
+    .skel-card .skel-preview {
+      height: 128px;
+      background: linear-gradient(90deg, #eef0f1 25%, #e4e6e8 37%, #eef0f1 63%);
+      background-size: 400% 100%;
+      animation: shimmer 1.4s ease infinite;
+    }
+    .skel-card .skel-body { padding: 12px 14px 14px; }
     .skel-line {
       background: linear-gradient(90deg, #eef0f1 25%, #e4e6e8 37%, #eef0f1 63%);
       background-size: 400% 100%;
@@ -292,75 +480,134 @@
       flex-direction: column;
       box-shadow: 0 12px 40px rgba(0,0,0,.25);
     }
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: transparent;
+      color: var(--text-subdued);
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+      border-radius: 999px;
+    }
+    .modal-close:hover { background: var(--bg); color: var(--text); }
     .modal-header {
-      padding: 18px 20px 4px;
+      padding: 22px 40px 4px 22px;
     }
     .modal-header h2 {
       margin: 0;
-      font-size: 16px;
+      font-size: 17px;
       font-weight: 650;
     }
     .modal-header p {
-      margin: 4px 0 0;
-      font-size: 13px;
+      margin: 6px 0 0;
+      font-size: 13.5px;
       color: var(--text-subdued);
     }
     .modal-body {
-      padding: 12px 12px 4px;
-      overflow-y: auto;
+      padding: 16px 22px 4px;
+      overflow: visible;
       flex: 1;
     }
+
+    /* Split button theme picker */
+    .theme-picker { position: relative; }
+    .split-btn {
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+      width: 100%;
+    }
+    .split-main {
+      margin-top: 0;
+      flex: 1;
+      border-radius: 8px 0 0 8px;
+      text-align: left;
+      justify-content: flex-start;
+      padding-left: 16px;
+    }
+    .split-toggle {
+      flex-shrink: 0;
+      width: 40px;
+      border: none;
+      border-left: 1px solid rgba(255,255,255,.25);
+      background: var(--green);
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0 8px 8px 0;
+      transition: background .12s;
+    }
+    .split-toggle:hover { background: var(--green-dark); }
+    .split-toggle svg { transition: transform .12s; }
+    .theme-picker.open .split-toggle svg { transform: rotate(180deg); }
+
+    .theme-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(26,28,29,.14);
+      z-index: 5;
+      max-height: 220px;
+      overflow-y: auto;
+      padding: 6px;
+    }
+    .theme-picker.open .theme-dropdown { display: block; }
     .theme-row {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 11px 10px;
-      border-radius: 9px;
+      gap: 10px;
+      padding: 9px 10px;
+      border-radius: 8px;
       cursor: pointer;
-      border: 1px solid transparent;
     }
     .theme-row:hover { background: var(--bg); }
-    .theme-row.selected {
-      background: var(--green-tint);
-      border-color: var(--green);
-    }
-    .theme-row .radio {
-      width: 17px;
-      height: 17px;
-      border-radius: 999px;
-      border: 2px solid #c9cccf;
+    .theme-row.selected { background: var(--green-tint); }
+    .theme-row .check {
+      width: 15px;
+      height: 15px;
       flex-shrink: 0;
-      position: relative;
+      color: var(--green);
+      visibility: hidden;
     }
-    .theme-row.selected .radio {
-      border-color: var(--green);
-    }
-    .theme-row.selected .radio::after {
-      content: '';
-      position: absolute;
-      inset: 3px;
-      border-radius: 999px;
-      background: var(--green);
-    }
+    .theme-row.selected .check { visibility: visible; }
     .theme-row .theme-name {
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 550;
       flex: 1;
     }
     .theme-row .live-badge {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 700;
       color: var(--green-dark);
       background: var(--green-tint);
-      padding: 3px 8px;
+      padding: 3px 7px;
       border-radius: 999px;
       text-transform: uppercase;
     }
+    .modal-caption {
+      margin: 10px 0 0;
+      font-size: 12.5px;
+      color: var(--text-subdued);
+    }
+    .modal-caption strong { color: var(--text); font-weight: 600; }
+
     .modal-footer {
       display: flex;
       justify-content: flex-end;
       gap: 8px;
-      padding: 14px 20px 18px;
+      padding: 18px 22px 20px;
     }
     .btn-cancel {
       border: 1px solid var(--border);
@@ -373,7 +620,7 @@
       cursor: pointer;
     }
     .modal-msg {
-      padding: 20px;
+      padding: 20px 0;
       font-size: 13.5px;
       color: var(--text-subdued);
     }
@@ -383,9 +630,12 @@
 <body>
   <div class="shell">
     <div class="topbar">
-      <div>
-        <h1>Section Factory</h1>
-        <p>Browse section templates and add them to your theme.</p>
+      <div class="brand">
+        <span class="brand-mark">S</span>
+        <div>
+          <h1>Section Factory</h1>
+          <p>Browse section templates and add them to your theme.</p>
+        </div>
       </div>
       <div class="shop-chip" id="shopInfo">
         <span class="dot"></span>
@@ -401,26 +651,42 @@
         </svg>
         <input type="text" id="searchInput" placeholder="Search sections…" autocomplete="off" />
       </div>
-      <div class="chip-row" id="categoryChips"></div>
+      <button class="btn-secondary" id="requestBtn" type="button">
+        <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        Request a section
+      </button>
+      <button class="btn-secondary" id="categoriesBtn" type="button">
+        <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M6 10h8M8.5 15h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        Categories
+      </button>
     </div>
 
-    <div class="grid" id="templateGrid">
-      <div class="skel-card"><div class="skel-line" style="height:16px;width:60%;margin-bottom:12px;"></div><div class="skel-line" style="height:20px;width:80%;margin-bottom:10px;"></div><div class="skel-line" style="height:13px;width:100%;margin-bottom:6px;"></div><div class="skel-line" style="height:13px;width:70%;"></div></div>
-      <div class="skel-card"><div class="skel-line" style="height:16px;width:50%;margin-bottom:12px;"></div><div class="skel-line" style="height:20px;width:70%;margin-bottom:10px;"></div><div class="skel-line" style="height:13px;width:100%;margin-bottom:6px;"></div><div class="skel-line" style="height:13px;width:60%;"></div></div>
-      <div class="skel-card"><div class="skel-line" style="height:16px;width:55%;margin-bottom:12px;"></div><div class="skel-line" style="height:20px;width:75%;margin-bottom:10px;"></div><div class="skel-line" style="height:13px;width:100%;margin-bottom:6px;"></div><div class="skel-line" style="height:13px;width:65%;"></div></div>
+    <div class="category-panel" id="categoryPanel"></div>
+
+    <div class="icon-strip-wrap">
+      <div class="icon-strip" id="iconStrip"></div>
+      <button class="icon-scroll-btn" id="iconScrollBtn" aria-label="Scroll categories">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M7.5 4.5l5.5 5.5-5.5 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+    <div id="content">
+      <div class="row-section">
+        <div class="skel-card" style="flex:0 0 100%;"><div class="skel-preview"></div></div>
+      </div>
     </div>
   </div>
 
   <div class="modal-overlay" id="themeModalOverlay">
     <div class="modal">
+      <button class="modal-close" id="themeModalClose" aria-label="Close" type="button">&times;</button>
       <div class="modal-header">
-        <h2 id="themeModalTitle">Choose a theme</h2>
-        <p>Pick which theme to add this section to.</p>
+        <h2 id="themeModalTitle">It's yours 🎉</h2>
+        <p>Let's add it to your theme so you can start using it.</p>
       </div>
       <div class="modal-body" id="themeModalBody"></div>
       <div class="modal-footer">
-        <button class="btn-cancel" id="themeModalCancel">Cancel</button>
-        <button class="install-btn" id="themeModalConfirm" disabled>Add to theme</button>
+        <button class="btn-cancel" id="themeModalCancel">I'll do this later</button>
       </div>
     </div>
   </div>
@@ -428,7 +694,40 @@
   <script>
     let allTemplates = [];
     let activeCategory = 'All';
+    let activeTag = null;
     let searchTerm = '';
+
+    const GRADIENTS = {
+      Hero: ['#1f6f5c', '#0b3d33'],
+      Features: ['#2f5c8a', '#16324f'],
+      Testimonial: ['#caa23a', '#8a6d1f'],
+      Video: ['#7a3fae', '#3f1f66'],
+      Countdown: ['#b8433c', '#732622'],
+      Scrolling: ['#3a7d7d', '#1f4a4a'],
+      Images: ['#c25b8e', '#732e54'],
+      Snippet: ['#4b4f54', '#232527'],
+      Text: ['#2c2f33', '#101214']
+    };
+    function gradientFor(category) {
+      const g = GRADIENTS[category] || ['#5c6066', '#2c2f33'];
+      return `linear-gradient(135deg, ${g[0]}, ${g[1]})`;
+    }
+
+    const ICON_STRIP = [
+      { key: 'popular', label: 'Popular', icon: '<path d="M10 3l1.9 4.6 5 .4-3.8 3.3 1.2 4.9L10 13.8 5.7 16.2l1.2-4.9L3.1 8l5-.4L10 3z" fill="currentColor"/>' },
+      { key: 'trending', label: 'Trending', icon: '<path d="M4 13l4-4 3 3 5-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M12 6h4v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>' },
+      { key: 'newest', label: 'Newest', icon: '<path d="M10 3v3M10 14v3M3 10h3M14 10h3M5.5 5.5l2 2M12.5 12.5l2 2M5.5 14.5l2-2M12.5 7.5l2-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>' },
+      { key: 'free', label: 'Free', icon: '<rect x="3" y="8" width="14" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M10 8V6a2 2 0 10-3.5-1.3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>' },
+      { key: 'features', label: 'Features', icon: '<circle cx="10" cy="10" r="6.5" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M10 6.5v4l2.5 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>' },
+      { key: 'testimonial', label: 'Testimonial', icon: '<path d="M4 5h12v7H8l-3 3v-3H4V5z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/>' },
+      { key: 'scrolling', label: 'Scrolling', icon: '<path d="M6 8l-3 2 3 2M14 8l3 2-3 2M9 5l2 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>' },
+      { key: 'hero', label: 'Hero', icon: '<rect x="3" y="4" width="14" height="12" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M3 13l4-3 3 2 4-4 3 2" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' },
+      { key: 'video', label: 'Video', icon: '<rect x="3" y="5" width="10" height="10" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M13 9l4-2.5v7L13 11" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/>' },
+      { key: 'countdown', label: 'Countdown', icon: '<circle cx="10" cy="11" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M10 8v3l2 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M8 3h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>' },
+      { key: 'images', label: 'Images', icon: '<rect x="3" y="4" width="14" height="12" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="7.5" cy="8.5" r="1.3" fill="currentColor"/><path d="M4 14l4-3.5 3 2.5 3-3 3 2.5" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="round"/>' },
+      { key: 'snippet', label: 'Snippet', icon: '<path d="M7 5L3 10l4 5M13 5l4 5-4 5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' },
+      { key: 'text', label: 'Text', icon: '<path d="M4 5h12M10 5v10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>' }
+    ];
 
     async function getSessionToken() {
       const host = new URLSearchParams(window.location.search).get('host');
@@ -442,69 +741,151 @@
       return div.innerHTML;
     }
 
-    function renderChips() {
-      const categories = ['All', ...new Set(allTemplates.map((t) => t.category))];
-      const chips = document.getElementById('categoryChips');
-      chips.innerHTML = categories.map((c) => `
-        <button class="chip ${c === activeCategory ? 'active' : ''}" data-cat="${escapeHtml(c)}">${escapeHtml(c)}</button>
+    function renderIconStrip() {
+      const wrap = document.getElementById('iconStrip');
+      wrap.innerHTML = ICON_STRIP.map((item) => `
+        <button class="icon-item ${activeTag === item.key ? 'active' : ''}" data-tag="${item.key}" type="button">
+          <span class="icon-circle"><svg width="17" height="17" viewBox="0 0 20 20">${item.icon}</svg></span>
+          ${escapeHtml(item.label)}
+        </button>
       `).join('');
-      chips.querySelectorAll('.chip').forEach((btn) => {
+      wrap.querySelectorAll('.icon-item').forEach((btn) => {
         btn.addEventListener('click', () => {
-          activeCategory = btn.dataset.cat;
-          renderChips();
-          renderGrid();
+          const key = btn.dataset.tag;
+          activeTag = activeTag === key ? null : key;
+          renderIconStrip();
+          renderContent();
         });
       });
     }
 
-    function renderGrid() {
-      const grid = document.getElementById('templateGrid');
-      const filtered = allTemplates.filter((item) => {
-        const matchesCategory = activeCategory === 'All' || item.category === activeCategory;
-        const matchesSearch = !searchTerm || item.name.toLowerCase().includes(searchTerm) || item.description.toLowerCase().includes(searchTerm);
-        return matchesCategory && matchesSearch;
-      });
+    document.getElementById('iconScrollBtn').addEventListener('click', () => {
+      document.getElementById('iconStrip').scrollBy({ left: 220, behavior: 'smooth' });
+    });
 
-      if (filtered.length === 0) {
-        grid.innerHTML = `
-          <div class="empty-state">
-            <svg width="40" height="40" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.4"/>
-              <path d="M18 18L14 14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-            </svg>
-            <p>No sections match your search.</p>
+    function renderCategoryPanel() {
+      const categories = ['All', ...new Set(allTemplates.map((t) => t.category))];
+      const panel = document.getElementById('categoryPanel');
+      panel.innerHTML = categories.map((c) => `
+        <button class="chip ${c === activeCategory ? 'active' : ''}" data-cat="${escapeHtml(c)}" type="button">${escapeHtml(c)}</button>
+      `).join('');
+      panel.querySelectorAll('.chip').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          activeCategory = btn.dataset.cat;
+          renderCategoryPanel();
+          renderContent();
+        });
+      });
+    }
+
+    document.getElementById('categoriesBtn').addEventListener('click', (e) => {
+      document.getElementById('categoryPanel').classList.toggle('open');
+      e.currentTarget.classList.toggle('active');
+    });
+
+    document.getElementById('requestBtn').addEventListener('click', () => {
+      window.open('mailto:support@sectionfactory.app?subject=Section%20request', '_top');
+    });
+
+    function cardHtml(item) {
+      return `
+        <div class="card">
+          <div class="card-preview" style="background:${gradientFor(item.category)}">
+            <div class="mock-lines"><span></span><span></span></div>
+            <span class="pill">${escapeHtml(item.category)}</span>
+          </div>
+          <div class="card-body">
+            <div class="card-title-row">
+              <h3>${escapeHtml(item.name)}</h3>
+              <span class="price-tag ${item.price.toLowerCase() === 'free' ? 'free' : 'pro'}">${escapeHtml(item.price)}</span>
+            </div>
+            <p class="desc">${escapeHtml(item.description)}</p>
+            ${item.installable ? `
+              <button class="install-btn" data-id="${item.id}">Add to theme</button>
+              <span class="install-status" data-status-for="${item.id}"></span>
+            ` : `
+              <div class="coming-soon">Not installable yet</div>
+            `}
+          </div>
+        </div>
+      `;
+    }
+
+    function bindInstallButtons(scope) {
+      scope.querySelectorAll('.install-btn').forEach((btn) => {
+        btn.addEventListener('click', () => openThemeModal(btn.dataset.id));
+      });
+    }
+
+    function emptyStateHtml() {
+      return `
+        <div class="empty-state">
+          <svg width="40" height="40" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M18 18L14 14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          <p>No sections match your search.</p>
+        </div>
+      `;
+    }
+
+    function scrollRow(id, dir) {
+      document.getElementById(id).scrollBy({ left: dir * 500, behavior: 'smooth' });
+    }
+    window.scrollRow = scrollRow;
+
+    function renderContent() {
+      const content = document.getElementById('content');
+      const isFiltering = activeCategory !== 'All' || activeTag || searchTerm;
+
+      const matchesSearch = (item) =>
+        !searchTerm ||
+        item.name.toLowerCase().includes(searchTerm) ||
+        item.description.toLowerCase().includes(searchTerm);
+
+      if (isFiltering) {
+        const filtered = allTemplates.filter((item) =>
+          (activeCategory === 'All' || item.category === activeCategory) &&
+          (!activeTag || (item.tags || []).includes(activeTag)) &&
+          matchesSearch(item)
+        );
+
+        content.innerHTML = `
+          <div class="row-section">
+            <div class="row-head"><h2>Results</h2></div>
+            <div class="grid">${filtered.length ? filtered.map(cardHtml).join('') : emptyStateHtml()}</div>
           </div>
         `;
+        bindInstallButtons(content);
         return;
       }
 
-      grid.innerHTML = filtered.map((item) => `
-        <div class="card">
-          <div class="card-top">
-            <span class="pill">${escapeHtml(item.category)}</span>
-            <span class="price-tag ${item.price.toLowerCase() === 'free' ? 'free' : 'pro'}">${escapeHtml(item.price)}</span>
+      const rows = [
+        { id: 'rowTrending', title: 'Trending Sections', items: allTemplates.filter((t) => (t.tags || []).includes('trending')) },
+        { id: 'rowNewest', title: 'Newest Releases', items: allTemplates.filter((t) => (t.tags || []).includes('newest')) },
+        { id: 'rowFree', title: 'Free Sections', items: allTemplates.filter((t) => t.price === 'Free') }
+      ].filter((row) => row.items.length);
+
+      content.innerHTML = rows.map((row) => `
+        <div class="row-section">
+          <div class="row-head">
+            <h2>${escapeHtml(row.title)}</h2>
+            <button type="button" onclick="scrollRow('${row.id}', 1)" aria-label="Scroll right">
+              <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M7.5 4.5l5.5 5.5-5.5 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
           </div>
-          <h3>${escapeHtml(item.name)}</h3>
-          <p class="desc">${escapeHtml(item.description)}</p>
-          ${item.installable ? `
-            <button class="install-btn" data-id="${item.id}">Add to theme</button>
-            <span class="install-status" data-status-for="${item.id}"></span>
-          ` : `
-            <div class="coming-soon">Not installable yet</div>
-          `}
+          <div class="card-row" id="${row.id}">${row.items.map(cardHtml).join('')}</div>
         </div>
       `).join('');
-
-      grid.querySelectorAll('.install-btn').forEach((btn) => {
-        btn.addEventListener('click', () => openThemeModal(btn.dataset.id));
-      });
+      bindInstallButtons(content);
     }
 
     async function loadTemplates() {
       const res = await fetch('/api/sections');
       allTemplates = await res.json();
-      renderChips();
-      renderGrid();
+      renderIconStrip();
+      renderCategoryPanel();
+      renderContent();
     }
 
     let themesCache = null;
@@ -513,17 +894,14 @@
 
     const themeModalOverlay = document.getElementById('themeModalOverlay');
     const themeModalBody = document.getElementById('themeModalBody');
-    const themeModalConfirm = document.getElementById('themeModalConfirm');
     const themeModalTitle = document.getElementById('themeModalTitle');
 
     async function openThemeModal(sectionId) {
       modalSectionId = sectionId;
       modalSelectedThemeId = null;
-      themeModalConfirm.disabled = true;
-      themeModalConfirm.textContent = 'Add to theme';
 
       const section = allTemplates.find((t) => t.id === sectionId);
-      themeModalTitle.textContent = section ? `Add "${section.name}"` : 'Choose a theme';
+      themeModalTitle.textContent = section ? `"${section.name}" is yours 🎉` : "It's yours 🎉";
 
       themeModalOverlay.classList.add('open');
       themeModalBody.innerHTML = '<div class="modal-msg">Loading your themes…</div>';
@@ -549,30 +927,65 @@
 
         const liveTheme = themesCache.find((t) => t.role === 'MAIN');
         modalSelectedThemeId = (liveTheme || themesCache[0]).id;
-        renderThemeList();
+        renderThemePicker();
       } catch (err) {
         themeModalBody.innerHTML = `<div class="modal-msg error">${escapeHtml(err.message)}</div>`;
       }
     }
 
-    function renderThemeList() {
-      themeModalBody.innerHTML = themesCache.map((theme) => `
-        <div class="theme-row ${theme.id === modalSelectedThemeId ? 'selected' : ''}" data-theme-id="${theme.id}">
-          <span class="radio"></span>
-          <span class="theme-name">${escapeHtml(theme.name)}</span>
-          ${theme.role === 'MAIN' ? '<span class="live-badge">Live</span>' : ''}
-        </div>
-      `).join('');
+    function selectedTheme() {
+      return themesCache.find((t) => t.id === modalSelectedThemeId);
+    }
 
-      themeModalBody.querySelectorAll('.theme-row').forEach((row) => {
+    function renderThemePicker() {
+      const theme = selectedTheme();
+      themeModalBody.innerHTML = `
+        <div class="theme-picker" id="themePicker">
+          <div class="split-btn">
+            <button class="install-btn split-main" id="themeInstallBtn" type="button">Add to theme</button>
+            <button class="split-toggle" id="themeToggleBtn" type="button" aria-haspopup="listbox" aria-label="Choose theme">
+              <svg width="12" height="12" viewBox="0 0 20 20" fill="none"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+          <div class="theme-dropdown" id="themeDropdown" role="listbox">
+            ${themesCache.map((t) => `
+              <div class="theme-row ${t.id === modalSelectedThemeId ? 'selected' : ''}" data-theme-id="${t.id}" role="option">
+                <svg class="check" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span class="theme-name">${escapeHtml(t.name)}</span>
+                ${t.role === 'MAIN' ? '<span class="live-badge">Live</span>' : ''}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        <p class="modal-caption">Adds section with default settings to <strong id="selectedThemeName">${escapeHtml(theme.name)}</strong>.</p>
+      `;
+
+      const picker = document.getElementById('themePicker');
+
+      document.getElementById('themeToggleBtn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        picker.classList.toggle('open');
+      });
+
+      picker.querySelectorAll('.theme-row').forEach((row) => {
         row.addEventListener('click', () => {
           modalSelectedThemeId = row.dataset.themeId;
-          renderThemeList();
+          picker.classList.remove('open');
+          renderThemePicker();
         });
       });
 
-      themeModalConfirm.disabled = false;
+      document.getElementById('themeInstallBtn').addEventListener('click', () => {
+        if (modalSectionId && modalSelectedThemeId) {
+          installSection(modalSectionId, modalSelectedThemeId);
+        }
+      });
     }
+
+    document.addEventListener('click', (e) => {
+      const picker = document.getElementById('themePicker');
+      if (picker && !picker.contains(e.target)) picker.classList.remove('open');
+    });
 
     function closeThemeModal() {
       themeModalOverlay.classList.remove('open');
@@ -580,31 +993,33 @@
     }
 
     document.getElementById('themeModalCancel').addEventListener('click', closeThemeModal);
+    document.getElementById('themeModalClose').addEventListener('click', closeThemeModal);
     themeModalOverlay.addEventListener('click', (e) => {
       if (e.target === themeModalOverlay) closeThemeModal();
     });
 
-    themeModalConfirm.addEventListener('click', () => {
-      if (modalSectionId && modalSelectedThemeId) {
-        installSection(modalSectionId, modalSelectedThemeId);
-      }
-    });
-
     async function installSection(id, themeId) {
       const status = document.querySelector(`[data-status-for="${id}"]`);
-      status.className = 'install-status';
-      status.textContent = '';
+      if (status) {
+        status.className = 'install-status';
+        status.textContent = '';
+      }
 
       const token = await getSessionToken();
       if (!token) {
         closeThemeModal();
-        status.className = 'install-status error';
-        status.textContent = 'Open this app from inside Shopify admin to install sections.';
+        if (status) {
+          status.className = 'install-status error';
+          status.textContent = 'Open this app from inside Shopify admin to install sections.';
+        }
         return;
       }
 
-      themeModalConfirm.disabled = true;
-      themeModalConfirm.innerHTML = '<span class="spinner"></span> Opening theme editor…';
+      const installBtn = document.getElementById('themeInstallBtn');
+      if (installBtn) {
+        installBtn.disabled = true;
+        installBtn.innerHTML = '<span class="spinner"></span> Opening theme editor…';
+      }
 
       try {
         const res = await fetch(`/api/sections/${id}/install-link?themeId=${encodeURIComponent(themeId)}`, {
@@ -616,15 +1031,19 @@
           throw new Error(result.error || 'Could not create install link');
         }
 
-        status.className = 'install-status ok';
-        status.textContent = `Opening theme editor for "${result.theme}"…`;
+        if (status) {
+          status.className = 'install-status ok';
+          status.textContent = `Opening theme editor for "${result.theme}"…`;
+        }
         closeThemeModal();
         window.open(result.editorUrl, '_top');
       } catch (err) {
         themeModalBody.innerHTML = `<div class="modal-msg error">${escapeHtml(err.message)}</div>`;
       } finally {
-        themeModalConfirm.disabled = false;
-        themeModalConfirm.textContent = 'Add to theme';
+        if (installBtn) {
+          installBtn.disabled = false;
+          installBtn.textContent = 'Add to theme';
+        }
       }
     }
 
@@ -650,7 +1069,7 @@
 
     document.getElementById('searchInput').addEventListener('input', (e) => {
       searchTerm = e.target.value.trim().toLowerCase();
-      renderGrid();
+      renderContent();
     });
 
     loadTemplates();
