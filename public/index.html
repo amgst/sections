@@ -1,98 +1,366 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Section Factory — Public Shopify App</title>
-    <style>
-      * { box-sizing: border-box; }
-      body {
-        margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
-        background: linear-gradient(135deg, #0f172a, #111827 55%, #1d4ed8);
-        color: #fff;
-      }
-      .wrap {
-        max-width: 1100px;
-        margin: 0 auto;
-        padding: 48px 24px 72px;
-      }
-      .hero {
-        display: grid;
-        grid-template-columns: 1.2fr 0.8fr;
-        gap: 28px;
-        align-items: center;
-      }
-      h1 { font-size: 3.2rem; margin: 0 0 14px; }
-      p { font-size: 1.04rem; line-height: 1.7; color: #dbeafe; }
-      .btns { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
-      .btn {
-        text-decoration: none;
-        padding: 12px 18px;
-        border-radius: 10px;
-        font-weight: 700;
-      }
-      .btn-primary { background: #fff; color: #0f172a; }
-      .btn-secondary { background: rgba(255,255,255,.1); color: #fff; border: 1px solid rgba(255,255,255,.2); }
-      .card {
-        background: rgba(255,255,255,.08);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255,255,255,.15);
-        border-radius: 18px;
-        padding: 22px;
-      }
-      .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 28px; }
-      .stat {
-        background: rgba(255,255,255,.08);
-        border-radius: 14px;
-        padding: 16px;
-        text-align: center;
-      }
-      @media (max-width: 840px) {
-        .hero { grid-template-columns: 1fr; }
-        .stats { grid-template-columns: 1fr; }
-        h1 { font-size: 2.4rem; }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="wrap">
-      <section class="hero">
-        <div>
-          <span style="display:inline-block;background:#ffffff22;padding:8px 12px;border-radius:999px;font-size:.84rem;margin-bottom:14px;">Public Shopify app starter</span>
-          <h1>Create store sections your merchants can install in minutes.</h1>
-          <p>
-            This starter mirrors the positioning of a Section Factory-style Shopify app: fast onboarding,
-            reusable section templates, and a polished admin experience for merchants.
-          </p>
-          <div class="btns">
-            <a class="btn btn-secondary" href="/api/sections">View Section API</a>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Section Factory — Browse sections</title>
+  <style>
+    :root {
+      --bg: #f1f2f4;
+      --surface: #ffffff;
+      --border: #e3e4e6;
+      --text: #1a1c1d;
+      --text-subdued: #6d7175;
+      --green: #008060;
+      --green-dark: #006e52;
+      --green-tint: #e3f6ef;
+      --gold-tint: #fdf3d4;
+      --gold-text: #8a6116;
+      --radius: 12px;
+      --shadow: 0 1px 2px rgba(26,28,29,.06), 0 1px 6px rgba(26,28,29,.04);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #0f172a, #111827 55%, #1d4ed8);
+      color: #fff;
+      padding: 56px 20px 64px;
+    }
+    .hero-inner { max-width: 1200px; margin: 0 auto; }
+    .hero-eyebrow {
+      display: inline-block;
+      background: #ffffff22;
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: .8rem;
+      margin-bottom: 16px;
+    }
+    .hero h1 { font-size: 2.6rem; margin: 0 0 12px; max-width: 760px; line-height: 1.15; }
+    .hero p.lead { font-size: 1.02rem; line-height: 1.6; color: #dbeafe; max-width: 620px; margin: 0 0 22px; }
+    .hero-stat {
+      font-size: .92rem;
+      color: #dbeafe;
+      margin: 0 0 24px;
+    }
+    .hero-stat strong { color: #fff; }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      background: #fff;
+      color: #0f172a;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: .94rem;
+    }
+
+    /* Shell */
+    .shell { max-width: 1200px; margin: 0 auto; padding: 28px 20px 64px; }
+
+    .toolbar { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+    .search-box { position: relative; flex: 1 1 260px; }
+    .search-box svg {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      color: var(--text-subdued); pointer-events: none;
+    }
+    .search-box input {
+      width: 100%; padding: 11px 12px 11px 36px; border-radius: 9px;
+      border: 1px solid var(--border); background: var(--surface);
+      font-size: 14px; color: var(--text); outline: none;
+      transition: border-color .12s, box-shadow .12s;
+    }
+    .search-box input:focus { border-color: var(--green); box-shadow: 0 0 0 3px var(--green-tint); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 7px;
+      border: 1px solid var(--border); background: var(--surface); color: var(--text);
+      border-radius: 9px; padding: 0 14px; font-size: 13.5px; font-weight: 600;
+      cursor: pointer; white-space: nowrap; transition: background .12s, border-color .12s;
+    }
+    .btn-secondary:hover { background: var(--bg); }
+    .btn-secondary.active { background: var(--text); border-color: var(--text); color: #fff; }
+
+    .category-panel {
+      display: none; flex-wrap: wrap; gap: 6px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      padding: 12px; margin-bottom: 14px; box-shadow: var(--shadow);
+    }
+    .category-panel.open { display: flex; }
+    .chip {
+      border: 1px solid var(--border); background: var(--bg); color: var(--text);
+      border-radius: 999px; padding: 8px 14px; font-size: 13px; font-weight: 500;
+      cursor: pointer; transition: background .12s, border-color .12s, color .12s; white-space: nowrap;
+    }
+    .chip:hover { border-color: #c9cccf; }
+    .chip.active { background: var(--text); border-color: var(--text); color: #fff; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column;
+      transition: box-shadow .15s, transform .15s;
+    }
+    .card:hover { box-shadow: 0 2px 4px rgba(26,28,29,.08), 0 4px 14px rgba(26,28,29,.08); transform: translateY(-1px); }
+    .card-preview { position: relative; height: 128px; display: flex; align-items: flex-end; padding: 12px; overflow: hidden; }
+    .card-preview .pill {
+      position: relative; z-index: 1; display: inline-block; background: rgba(255,255,255,.9);
+      color: #2a2c2e; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 650;
+    }
+    .card-preview .mock-lines { position: absolute; inset: 14px 14px auto 14px; display: flex; flex-direction: column; gap: 6px; }
+    .card-preview .mock-lines span { display: block; height: 7px; border-radius: 4px; background: rgba(255,255,255,.55); }
+    .card-preview .mock-lines span:nth-child(1) { width: 55%; }
+    .card-preview .mock-lines span:nth-child(2) { width: 80%; height: 4px; opacity: .7; }
+
+    .card-body { padding: 12px 14px 14px; display: flex; flex-direction: column; flex: 1; }
+    .card-title-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 2px; }
+    .card h3 { margin: 0; font-size: 14.5px; font-weight: 650; }
+    .price-tag { font-size: 11.5px; font-weight: 700; padding: 3px 9px; border-radius: 6px; white-space: nowrap; flex-shrink: 0; }
+    .price-tag.free { background: var(--green-tint); color: var(--green-dark); }
+    .price-tag.pro { background: var(--gold-tint); color: var(--gold-text); }
+    .card p.desc { margin: 4px 0 0; color: var(--text-subdued); font-size: 12.5px; line-height: 1.5; flex-grow: 1; }
+
+    .preview-btn {
+      margin-top: 12px; display: inline-flex; align-items: center; justify-content: center;
+      border: 1px solid var(--border); background: var(--surface); color: var(--text);
+      padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
+      transition: background .12s;
+    }
+    .preview-btn:hover { background: var(--bg); }
+    .coming-soon { margin-top: 12px; font-size: 12px; color: var(--text-subdued); font-style: italic; }
+
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--text-subdued); }
+
+    /* Preview modal */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(26,28,29,.45);
+      align-items: center; justify-content: center; padding: 20px; z-index: 100;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface); border-radius: 14px; width: 100%; max-width: 720px; max-height: 85vh;
+      display: flex; flex-direction: column; box-shadow: 0 12px 40px rgba(0,0,0,.25); position: relative;
+    }
+    .modal-close {
+      position: absolute; top: 14px; right: 14px; width: 28px; height: 28px; border: none;
+      background: transparent; color: var(--text-subdued); font-size: 18px; line-height: 1;
+      cursor: pointer; border-radius: 999px;
+    }
+    .modal-close:hover { background: var(--bg); color: var(--text); }
+    .modal-header { padding: 22px 40px 4px 22px; }
+    .modal-header h2 { margin: 0; font-size: 17px; font-weight: 650; }
+    .modal-header p { margin: 6px 0 0; font-size: 13.5px; color: var(--text-subdued); }
+    .modal-body { padding: 0; overflow: hidden; flex: 1; background: var(--bg); }
+    .modal-body iframe { display: block; width: 100%; height: 65vh; border: 0; background: #fff; }
+    .modal-footer { display: flex; justify-content: flex-end; gap: 8px; padding: 18px 22px 20px; }
+    .btn-cancel {
+      border: 1px solid var(--border); background: var(--surface); color: var(--text);
+      padding: 9px 14px; border-radius: 8px; font-size: 13.5px; font-weight: 600; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <div class="hero-inner">
+      <span class="hero-eyebrow">Section Factory</span>
+      <h1>Ready-made storefront sections you can preview before you install.</h1>
+      <p class="lead">
+        Browse the section catalog below — every listed design links to a live preview rendered from
+        its real theme code, not a mockup. Install into your store from inside Shopify admin.
+      </p>
+      <p class="hero-stat" id="heroStat">Loading catalog…</p>
+      <a class="btn-primary" href="/admin">Open in Shopify Admin →</a>
+    </div>
+  </div>
+
+  <div class="shell">
+    <div class="toolbar">
+      <div class="search-box">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M18 18L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <input type="text" id="searchInput" placeholder="Search sections…" autocomplete="off" />
+      </div>
+      <button class="btn-secondary" id="categoriesBtn" type="button">
+        <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M6 10h8M8.5 15h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        Categories
+      </button>
+    </div>
+
+    <div class="category-panel" id="categoryPanel"></div>
+
+    <div id="content">
+      <div class="empty-state">Loading sections…</div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="previewModalOverlay">
+    <div class="modal">
+      <button class="modal-close" id="previewModalClose" aria-label="Close" type="button">&times;</button>
+      <div class="modal-header">
+        <h2 id="previewModalTitle">Preview</h2>
+        <p>Live render with default settings — every color, size and text becomes editable once it's on your theme.</p>
+      </div>
+      <div class="modal-body">
+        <iframe id="previewFrame" title="Section preview" src="about:blank"></iframe>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" id="previewModalCancel">Close</button>
+        <a class="btn-cancel" id="previewToAdminLink" href="/admin" style="text-decoration:none; background:var(--green); color:#fff; border-color:var(--green);">Open in Shopify Admin</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let allTemplates = [];
+    let activeCategory = 'All';
+    let searchTerm = '';
+
+    const GRADIENTS = {
+      Hero: ['#1f6f5c', '#0b3d33'],
+      Features: ['#2f5c8a', '#16324f'],
+      Testimonial: ['#caa23a', '#8a6d1f'],
+      Video: ['#7a3fae', '#3f1f66'],
+      Countdown: ['#b8433c', '#732622'],
+      Scrolling: ['#3a7d7d', '#1f4a4a'],
+      Images: ['#c25b8e', '#732e54'],
+      Snippet: ['#4b4f54', '#232527'],
+      Text: ['#2c2f33', '#101214'],
+      Cart: ['#1f5c3f', '#0e3324']
+    };
+    function gradientFor(category) {
+      const g = GRADIENTS[category] || ['#5c6066', '#2c2f33'];
+      return `linear-gradient(135deg, ${g[0]}, ${g[1]})`;
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function cardHtml(item) {
+      return `
+        <div class="card">
+          <div class="card-preview" style="background:${gradientFor(item.category)}">
+            <div class="mock-lines"><span></span><span></span></div>
+            <span class="pill">${escapeHtml(item.category)}</span>
+          </div>
+          <div class="card-body">
+            <div class="card-title-row">
+              <h3>${escapeHtml(item.name)}</h3>
+              <span class="price-tag ${item.price.toLowerCase() === 'free' ? 'free' : 'pro'}">${escapeHtml(item.price)}</span>
+            </div>
+            <p class="desc">${escapeHtml(item.description)}</p>
+            ${item.installable ? `
+              <button class="preview-btn" data-id="${item.id}" type="button">Preview</button>
+            ` : `
+              <div class="coming-soon">Not available to preview yet</div>
+            `}
           </div>
         </div>
-        <div class="card">
-          <h2 style="margin-top:0;">App Highlights</h2>
-          <ul>
-            <li>Embedded merchant dashboard</li>
-            <li>Section template catalog</li>
-            <li>Public app listing-ready structure</li>
-          </ul>
-        </div>
-      </section>
+      `;
+    }
 
-      <section class="stats">
-        <div class="stat">
-          <strong>50+</strong>
-          <div>section templates</div>
-        </div>
-        <div class="stat">
-          <strong>1-click</strong>
-          <div>installation flow</div>
-        </div>
-        <div class="stat">
-          <strong>24/7</strong>
-          <div>merchant support</div>
-        </div>
-      </section>
-    </div>
-  </body>
+    function emptyStateHtml() {
+      return `<div class="empty-state">No sections match your search.</div>`;
+    }
+
+    function bindPreviewButtons(scope) {
+      scope.querySelectorAll('.preview-btn').forEach((btn) => {
+        btn.addEventListener('click', () => openPreviewModal(btn.dataset.id));
+      });
+    }
+
+    function renderCategoryPanel() {
+      const categories = ['All', ...new Set(allTemplates.map((t) => t.category))];
+      const panel = document.getElementById('categoryPanel');
+      panel.innerHTML = categories.map((c) => `
+        <button class="chip ${c === activeCategory ? 'active' : ''}" data-cat="${escapeHtml(c)}" type="button">${escapeHtml(c)}</button>
+      `).join('');
+      panel.querySelectorAll('.chip').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          activeCategory = btn.dataset.cat;
+          renderCategoryPanel();
+          renderContent();
+        });
+      });
+    }
+
+    document.getElementById('categoriesBtn').addEventListener('click', (e) => {
+      document.getElementById('categoryPanel').classList.toggle('open');
+      e.currentTarget.classList.toggle('active');
+    });
+
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      searchTerm = e.target.value.trim().toLowerCase();
+      renderContent();
+    });
+
+    function renderContent() {
+      const content = document.getElementById('content');
+      const matchesSearch = (item) =>
+        !searchTerm ||
+        item.name.toLowerCase().includes(searchTerm) ||
+        item.description.toLowerCase().includes(searchTerm);
+
+      const filtered = allTemplates.filter((item) =>
+        (activeCategory === 'All' || item.category === activeCategory) && matchesSearch(item)
+      );
+
+      content.innerHTML = `<div class="grid">${filtered.length ? filtered.map(cardHtml).join('') : emptyStateHtml()}</div>`;
+      bindPreviewButtons(content);
+    }
+
+    const previewModalOverlay = document.getElementById('previewModalOverlay');
+    const previewFrame = document.getElementById('previewFrame');
+    const previewModalTitle = document.getElementById('previewModalTitle');
+
+    function openPreviewModal(sectionId) {
+      const section = allTemplates.find((s) => s.id === sectionId);
+      previewModalTitle.textContent = section ? `${section.name} — preview` : 'Preview';
+      previewFrame.src = `/preview/${encodeURIComponent(sectionId)}`;
+      previewModalOverlay.classList.add('open');
+    }
+
+    function closePreviewModal() {
+      previewModalOverlay.classList.remove('open');
+      previewFrame.src = 'about:blank';
+    }
+
+    document.getElementById('previewModalCancel').addEventListener('click', closePreviewModal);
+    document.getElementById('previewModalClose').addEventListener('click', closePreviewModal);
+    previewModalOverlay.addEventListener('click', (e) => {
+      if (e.target === previewModalOverlay) closePreviewModal();
+    });
+
+    async function loadTemplates() {
+      const res = await fetch('/api/sections');
+      allTemplates = await res.json();
+      const ready = allTemplates.filter((t) => t.installable).length;
+      const upcoming = allTemplates.length - ready;
+      document.getElementById('heroStat').innerHTML =
+        `<strong>${ready}</strong> sections ready to preview now — <strong>${upcoming}</strong> more in the works.`;
+      renderCategoryPanel();
+      renderContent();
+    }
+
+    loadTemplates();
+  </script>
+</body>
 </html>
