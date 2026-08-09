@@ -1,0 +1,29 @@
+{% comment %}
+  NEW DESIGN-SNIPPET TEMPLATE — copy per design variant, don't edit in place.
+  Target path: extensions/section-blocks/snippets/wb-<name>-<design>.liquid
+  Rendered by the {% case %} dispatch in the matching blocks/wb-<name>.liquid.
+  See templates/section-block-template.liquid for the full "how to add a
+  new block type" checklist.
+
+  Conventions this follows (match wb-hero-*.liquid snippets exactly):
+  - BEM classes: wb-BLOCKNAME wb-BLOCKNAME--DESIGN, wb-BLOCKNAME__<element>.
+  - Root element also carries wb-BLOCKNAME-{{ block.id }} so the {% style %}
+    block in the parent block file can scope to this exact instance.
+  - Every optional field is guarded with `!= blank` — never assume a setting
+    has a value, block.settings fields have no defaults for picker types.
+  - image_picker / video fields get a graceful placeholder fallback (an
+    empty aria-hidden div, styled in the block-type's CSS file) instead of
+    rendering nothing, so an unconfigured block still looks intentional.
+{% endcomment %}
+<div class="wb-BLOCKNAME wb-BLOCKNAME--DESIGN wb-BLOCKNAME-{{ block.id }}">
+  {% if block.settings.heading != blank %}
+    <h2 class="wb-BLOCKNAME__heading">{{ block.settings.heading }}</h2>
+  {% endif %}
+
+  {% comment %} TODO: image_picker example — delete if this design has none {% endcomment %}
+  {% if block.settings.TODO_image != blank %}
+    {{ block.settings.TODO_image | image_url: width: 900 | image_tag: loading: 'lazy', class: 'wb-BLOCKNAME__image' }}
+  {% else %}
+    <div class="wb-BLOCKNAME__image-placeholder" aria-hidden="true"></div>
+  {% endif %}
+</div>

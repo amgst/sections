@@ -1,0 +1,122 @@
+{% comment %}
+  ============================================================================
+  NEW BLOCK-TYPE TEMPLATE — copy this file, don't edit it in place.
+  ============================================================================
+  This is the standardized shape every wb-* block type follows, established
+  from wb-hero-banner.liquid (see memory: project_block_schema_quality_bar).
+  It is NOT deployed — it lives outside extensions/section-blocks/ on purpose,
+  because Shopify auto-registers every .liquid file under blocks/ as a real
+  installable block type. Dropping a template in there would either break
+  `shopify app deploy` or ship a broken block to merchants.
+
+  HOW TO ADD A NEW BLOCK TYPE (e.g. a 4th block: wb-countdown)
+  1. Copy this file to extensions/section-blocks/blocks/wb-<name>.liquid.
+  2. Copy templates/section-design-template.liquid once per design variant to
+     extensions/section-blocks/snippets/wb-<name>-<design>.liquid.
+  3. Fill in the {% schema %} settings and the {% case %} dispatch below.
+  4. Add the matching CSS file at extensions/section-blocks/assets/wb-<name>.css
+     (structural rules only — colors/fonts/spacing stay in {% style %} per design).
+  5. Add one entry to REGISTERED_BLOCK_HANDLES in server.js.
+  6. Add one data/section-catalog.js entry per design, each with
+     block: { handle: 'wb-<name>', design: '<design-value>', designLabel: '...' }.
+  7. Run `npx shopify app build` — theme-check will catch ExcessiveSettingsCount
+     (cap is 40) and invalid tags (no {% stylesheet %} in app blocks) immediately.
+  8. Test the live preview at /preview/<catalog-id> before wiring the catalog
+     entry in — the renderer (lib/previewRenderer.js) needs no changes per
+     block type, it reads whatever schema/settings you define here.
+
+  RULES THAT AREN'T OPTIONAL (theme-check enforced, or platform-enforced):
+  - {% style %}, never {% stylesheet %} — app blocks reject {% stylesheet %}.
+  - Scope every CSS rule to .wb-<name>-{{ block.id }}, not section.id — app
+    blocks only get section.id from the parent section, and it isn't
+    guaranteed unique if two of your blocks land in the same section.
+  - Stay under 40 settings total. If a design needs more, split it into a
+    second block type rather than cramming more into one schema.
+  - Every design needs its own presets entry so it's independently browsable
+    in Shopify's native "Add block" picker (and gets Shopify's automatic
+    preset preview thumbnail there — no work required beyond the preset).
+{% endcomment %}
+
+{{ 'wb-common.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign design = block.settings.design
+  # TODO: assign any other locals you'll branch on more than once below
+-%}
+
+{% style %}
+  .wb-BLOCKNAME-{{ block.id }} {
+    background-color: {{ block.settings.background_color }};
+    color: {{ block.settings.text_color }};
+    /* Mobile-first: settings-depth trick — only the 1-2 fields merchants
+       actually adjust get an explicit *_mobile setting (see heading_size
+       below). Everything else here is computed as a ratio of the desktop
+       value so the schema doesn't need a duplicate setting for every field. */
+    padding-top: {{ block.settings.padding_top | times: 0.7 | round: 0 }}px;
+    padding-bottom: {{ block.settings.padding_bottom | times: 0.7 | round: 0 }}px;
+  }
+  .wb-BLOCKNAME-{{ block.id }} .wb-BLOCKNAME__heading {
+    font-size: {{ block.settings.heading_size_mobile }}px;
+  }
+
+  @media (min-width: 750px) {
+    .wb-BLOCKNAME-{{ block.id }} {
+      padding-top: {{ block.settings.padding_top }}px;
+      padding-bottom: {{ block.settings.padding_bottom }}px;
+    }
+    .wb-BLOCKNAME-{{ block.id }} .wb-BLOCKNAME__heading {
+      font-size: {{ block.settings.heading_size }}px;
+    }
+  }
+{% endstyle %}
+
+{% case design %}
+  {% when 'TODO_SECOND_DESIGN' %}
+    {% render 'wb-BLOCKNAME-TODO_SECOND_DESIGN', block: block %}
+  {% else %}
+    {% render 'wb-BLOCKNAME-TODO_FIRST_DESIGN', block: block %}
+{% endcase %}
+
+{% schema %}
+{
+  "name": "wb-BLOCKNAME",
+  "target": "section",
+  "stylesheet": "wb-BLOCKNAME.css",
+  "settings": [
+    {
+      "type": "select",
+      "id": "design",
+      "label": "Design",
+      "default": "TODO_FIRST_DESIGN",
+      "options": [
+        { "value": "TODO_FIRST_DESIGN", "label": "TODO label" },
+        { "value": "TODO_SECOND_DESIGN", "label": "TODO label" }
+      ]
+    },
+
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "TODO default copy" },
+
+    { "type": "header", "content": "Style" },
+    { "type": "range", "id": "heading_size", "label": "Heading font size", "min": 20, "max": 96, "step": 2, "unit": "px", "default": 48 },
+    { "type": "range", "id": "heading_size_mobile", "label": "Heading font size — mobile", "min": 16, "max": 72, "step": 2, "unit": "px", "default": 32 },
+
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#0f172a" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#ffffff" },
+
+    { "type": "header", "content": "Section" },
+    { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 80 }
+
+    // TODO: design-specific settings go last, each gated with
+    // "visible_if": "{{ block.settings.design == 'TODO_SECOND_DESIGN' }}"
+    // and its own header above it, exactly like wb-hero-banner.liquid does
+    // for "Split image design" / "Video background design" / etc.
+  ],
+  "presets": [
+    { "name": "BLOCKNAME — TODO first design", "category": "TODO", "settings": { "design": "TODO_FIRST_DESIGN" } },
+    { "name": "BLOCKNAME — TODO second design", "category": "TODO", "settings": { "design": "TODO_SECOND_DESIGN" } }
+  ]
+}
+{% endschema %}
