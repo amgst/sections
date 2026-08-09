@@ -4,11 +4,13 @@ const path = require('path');
 const fs = require('fs');
 const { getShopify } = require('./lib/shopify');
 const { requireShopifySession } = require('./lib/requireShopifySession');
+const { renderBlockPreview } = require('./lib/previewRenderer');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/theme-assets', express.static(path.join(__dirname, 'extensions', 'section-blocks', 'assets')));
 
 app.get('/healthz', (_req, res) => {
   res.json({ ok: true, service: 'shopify-section-app' });
@@ -122,6 +124,39 @@ app.get('/api/sections/:id/install-link', requireShopifySession, async (req, res
   } catch (err) {
     console.error('Section install-link error:', err.message);
     res.status(502).json({ error: 'Failed to reach Shopify Admin API' });
+  }
+});
+
+app.get('/preview/:id', async (req, res) => {
+  const section = SECTION_CATALOG.find((s) => s.id === req.params.id);
+  if (!section || !section.block || !REGISTERED_BLOCK_HANDLES.has(section.block.handle)) {
+    return res.status(404).send('Preview not available for this section yet.');
+  }
+
+  try {
+    const overrides = section.block.design ? { design: section.block.design } : {};
+    const { bodyHtml, extraStylesheet } = await renderBlockPreview(section.block.handle, overrides);
+
+    res.set('Content-Type', 'text/html').send(`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${section.name} preview</title>
+  ${extraStylesheet}
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #ffffff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    .wb-btn { text-decoration: none; display: inline-block; }
+  </style>
+</head>
+<body>
+  ${bodyHtml}
+</body>
+</html>`);
+  } catch (err) {
+    console.error('Preview render error:', err);
+    res.status(500).send('Could not render preview.');
   }
 });
 

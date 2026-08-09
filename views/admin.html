@@ -376,6 +376,25 @@
       flex-grow: 1;
     }
 
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .preview-btn {
+      flex-shrink: 0;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .12s;
+    }
+    .preview-btn:hover { background: var(--bg); }
+
     .install-btn {
       margin-top: 12px;
       display: inline-flex;
@@ -392,6 +411,7 @@
       cursor: pointer;
       transition: background .12s;
     }
+    .card-actions .install-btn { margin-top: 0; flex: 1; }
     .install-btn:hover:not(:disabled) { background: var(--green-dark); }
     .install-btn:disabled {
       opacity: 0.65;
@@ -512,6 +532,20 @@
       padding: 16px 22px 4px;
       overflow: visible;
       flex: 1;
+    }
+    .modal--preview { max-width: 720px; }
+    .modal-body--preview {
+      padding: 0;
+      overflow: hidden;
+      flex: 1;
+      background: var(--bg);
+    }
+    .modal-body--preview iframe {
+      display: block;
+      width: 100%;
+      height: 65vh;
+      border: 0;
+      background: #fff;
     }
 
     /* Split button theme picker */
@@ -702,6 +736,23 @@
     </div>
   </div>
 
+  <div class="modal-overlay" id="previewModalOverlay">
+    <div class="modal modal--preview">
+      <button class="modal-close" id="previewModalClose" aria-label="Close" type="button">&times;</button>
+      <div class="modal-header">
+        <h2 id="previewModalTitle">Preview</h2>
+        <p>Live render with default settings — every color, size and text is editable once it's on your theme.</p>
+      </div>
+      <div class="modal-body modal-body--preview">
+        <iframe id="previewFrame" title="Section preview" src="about:blank"></iframe>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" id="previewModalCancel">Close</button>
+        <button class="install-btn" id="previewToInstallBtn" type="button">Add to theme</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     let allTemplates = [];
     let activeCategory = 'All';
@@ -814,7 +865,10 @@
             </div>
             <p class="desc">${escapeHtml(item.description)}</p>
             ${item.installable ? `
-              <button class="install-btn" data-id="${item.id}">Add to theme</button>
+              <div class="card-actions">
+                <button class="preview-btn" data-id="${item.id}" type="button">Preview</button>
+                <button class="install-btn" data-id="${item.id}">Add to theme</button>
+              </div>
               <span class="install-status" data-status-for="${item.id}"></span>
             ` : `
               <div class="coming-soon">Not installable yet</div>
@@ -828,7 +882,40 @@
       scope.querySelectorAll('.install-btn').forEach((btn) => {
         btn.addEventListener('click', () => openThemeModal(btn.dataset.id));
       });
+      scope.querySelectorAll('.preview-btn').forEach((btn) => {
+        btn.addEventListener('click', () => openPreviewModal(btn.dataset.id));
+      });
     }
+
+    const previewModalOverlay = document.getElementById('previewModalOverlay');
+    const previewFrame = document.getElementById('previewFrame');
+    const previewModalTitle = document.getElementById('previewModalTitle');
+    let previewSectionId = null;
+
+    function openPreviewModal(sectionId) {
+      const section = allTemplates.find((s) => s.id === sectionId);
+      previewSectionId = sectionId;
+      previewModalTitle.textContent = section ? `${section.name} — preview` : 'Preview';
+      previewFrame.src = `/preview/${encodeURIComponent(sectionId)}`;
+      previewModalOverlay.classList.add('open');
+    }
+
+    function closePreviewModal() {
+      previewModalOverlay.classList.remove('open');
+      previewFrame.src = 'about:blank';
+      previewSectionId = null;
+    }
+
+    document.getElementById('previewModalCancel').addEventListener('click', closePreviewModal);
+    document.getElementById('previewModalClose').addEventListener('click', closePreviewModal);
+    previewModalOverlay.addEventListener('click', (e) => {
+      if (e.target === previewModalOverlay) closePreviewModal();
+    });
+    document.getElementById('previewToInstallBtn').addEventListener('click', () => {
+      const id = previewSectionId;
+      closePreviewModal();
+      if (id) openThemeModal(id);
+    });
 
     function emptyStateHtml() {
       return `

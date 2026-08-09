@@ -17,6 +17,7 @@
     "@shopify/shopify-api": "^13.1.0",
     "dotenv": "^17.4.2",
     "express": "^4.21.2",
+    "liquidjs": "^10.28.0",
     "pg": "^8.22.0"
   }
 }
