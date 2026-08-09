@@ -23,7 +23,7 @@ const SECTION_CATALOG = require('./data/section-catalog');
 // for how many catalog "designs" a single handle can represent). Direct theme-file writes
 // are not a workaround: themeFilesUpsert needs write_themes plus a Shopify-granted exemption
 // regular apps don't have.
-const REGISTERED_BLOCK_HANDLES = new Set(['wb-hero-banner', 'wb-product-grid', 'wb-testimonials']);
+const REGISTERED_BLOCK_HANDLES = new Set(['wb-hero-banner', 'wb-product-grid', 'wb-testimonials', 'wb-slider']);
 
 app.get('/api/sections', (_req, res) => {
   res.json(
@@ -135,7 +135,7 @@ app.get('/preview/:id', async (req, res) => {
 
   try {
     const overrides = section.block.design ? { design: section.block.design } : {};
-    const { bodyHtml, extraStylesheet } = await renderBlockPreview(section.block.handle, overrides);
+    const { bodyHtml, extraStylesheet, extraScript } = await renderBlockPreview(section.block.handle, overrides);
 
     res.set('Content-Type', 'text/html').send(`<!DOCTYPE html>
 <html lang="en">
@@ -144,6 +144,7 @@ app.get('/preview/:id', async (req, res) => {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${section.name} preview</title>
   ${extraStylesheet}
+  ${extraScript}
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; background: #ffffff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }

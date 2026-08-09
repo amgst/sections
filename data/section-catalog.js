@@ -60,6 +60,15 @@ module.exports = [
     block: { handle: 'wb-product-grid', design: null, designLabel: null }
   },
   {
+    id: 'product-slider',
+    name: 'Product Slider',
+    category: 'Slider',
+    price: 'Pro',
+    description: 'Tabbed hero slider that showcases up to 3 products with feature callouts and pricing.',
+    tags: ['popular', 'trending', 'hero'],
+    block: { handle: 'wb-slider', design: null, designLabel: null }
+  },
+  {
     id: 'testimonials-single-quote',
     name: 'Single Quote Testimonial',
     category: 'Testimonial',
