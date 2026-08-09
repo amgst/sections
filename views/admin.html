@@ -1057,7 +1057,7 @@
           status.textContent = `Opening theme editor for "${result.theme}"…`;
         }
         closeThemeModal();
-        window.open(result.editorUrl, '_top');
+        window.open(result.editorUrl, '_blank');
       } catch (err) {
         themeModalBody.innerHTML = `<div class="modal-msg error">${escapeHtml(err.message)}</div>`;
       } finally {
