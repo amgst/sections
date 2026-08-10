@@ -1,5 +1,32 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
-  <rect width="400" height="300" fill="#dfe1e3"/>
-  <path d="M0 240 L120 150 L180 200 L260 110 L400 220 V300 H0 Z" fill="#c7cacd"/>
-  <circle cx="300" cy="80" r="28" fill="#c7cacd"/>
+  <defs>
+    <linearGradient id="wb-ph-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6d5bd0"/>
+      <stop offset="55%" stop-color="#8a63c9"/>
+      <stop offset="100%" stop-color="#e08a6b"/>
+    </linearGradient>
+    <radialGradient id="wb-ph-glow-a" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity=".55"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="wb-ph-glow-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd9a8" stop-opacity=".5"/>
+      <stop offset="100%" stop-color="#ffd9a8" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="400" height="300" fill="url(#wb-ph-bg)"/>
+  <circle cx="60" cy="230" r="140" fill="url(#wb-ph-glow-a)"/>
+  <circle cx="330" cy="60" r="150" fill="url(#wb-ph-glow-b)"/>
+
+  <g opacity=".9">
+    <path d="M0 235 Q80 165 150 205 T400 175 V300 H0 Z" fill="#ffffff" fill-opacity=".10"/>
+    <path d="M0 260 Q100 210 210 245 T400 220 V300 H0 Z" fill="#ffffff" fill-opacity=".14"/>
+  </g>
+
+  <g transform="translate(200,150)" fill="none" stroke="#ffffff" stroke-opacity=".85" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+    <rect x="-34" y="-24" width="68" height="48" rx="7"/>
+    <circle cx="0" cy="1" r="14"/>
+    <path d="M-15 -24 L-9 -32 H9 L15 -24" fill="none"/>
+  </g>
 </svg>
