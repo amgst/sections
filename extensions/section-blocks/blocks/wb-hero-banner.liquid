@@ -171,10 +171,10 @@
       ]
     },
     { "type": "checkbox", "id": "button_custom_font", "label": "Use custom font", "default": false },
-    { "type": "font_picker", "id": "button_font", "label": "Font family", "default": "helvetica_n6", "visible_if": "{{ block.settings.button_custom_font }}" },
+    { "type": "font_picker", "id": "button_font", "label": "Font family", "default": "helvetica_n7", "visible_if": "{{ block.settings.button_custom_font }}" },
     { "type": "range", "id": "button_size", "label": "Font size", "min": 12, "max": 22, "step": 1, "unit": "px", "default": 15 },
     { "type": "range", "id": "button_size_mobile", "label": "Font size — mobile", "min": 12, "max": 20, "step": 1, "unit": "px", "default": 14 },
-    { "type": "range", "id": "button_radius", "label": "Roundness", "min": 0, "max": 100, "step": 2, "unit": "px", "default": 999, "visible_if": "{{ block.settings.button_style != 'link' }}" },
+    { "type": "range", "id": "button_radius", "label": "Roundness", "min": 0, "max": 100, "step": 2, "unit": "px", "default": 100, "visible_if": "{{ block.settings.button_style != 'link' }}" },
     { "type": "checkbox", "id": "button_advanced", "label": "Advanced settings" },
     { "type": "range", "id": "button_padding_horizontal", "label": "Padding horizontal", "min": 0, "max": 60, "step": 2, "unit": "px", "default": 28, "visible_if": "{{ block.settings.button_style != 'link' and block.settings.button_advanced }}" },
     { "type": "range", "id": "button_padding_vertical", "label": "Padding vertical", "min": 0, "max": 30, "step": 2, "unit": "px", "default": 14, "visible_if": "{{ block.settings.button_style != 'link' and block.settings.button_advanced }}" },
@@ -207,7 +207,7 @@
     { "type": "range", "id": "border_thickness", "label": "Border thickness", "min": 0, "max": 10, "step": 1, "unit": "px", "default": 0 },
     { "type": "color", "id": "border_color", "label": "Border color", "default": "#0f172a" },
 
-    { "type": "header", "content": "Split image design", "visible_if": "{{ block.settings.design == 'split-image' }}" },
+    { "type": "header", "content": "Design options", "visible_if": "{{ block.settings.design == 'split-image' or block.settings.design == 'video-background' or block.settings.design == 'announcement-overlay' }}" },
     { "type": "image_picker", "id": "split_image", "label": "Image", "visible_if": "{{ block.settings.design == 'split-image' }}" },
     {
       "type": "select",
@@ -221,19 +221,10 @@
       "visible_if": "{{ block.settings.design == 'split-image' }}"
     },
 
-    { "type": "header", "content": "Video background design", "visible_if": "{{ block.settings.design == 'video-background' }}" },
     { "type": "video", "id": "bg_video", "label": "Background video", "visible_if": "{{ block.settings.design == 'video-background' }}" },
     { "type": "image_picker", "id": "bg_video_poster", "label": "Poster image (shown until video loads)", "visible_if": "{{ block.settings.design == 'video-background' }}" },
 
-    { "type": "header", "content": "Announcement overlay design", "visible_if": "{{ block.settings.design == 'announcement-overlay' }}" },
     { "type": "text", "id": "overlay_badge_text", "label": "Badge text", "default": "Limited time", "visible_if": "{{ block.settings.design == 'announcement-overlay' }}" }
-  ],
-  "presets": [
-    { "name": "Hero — Classic centered", "category": "Hero", "settings": { "design": "classic-centered" } },
-    { "name": "Hero — Split image", "category": "Hero", "settings": { "design": "split-image" } },
-    { "name": "Hero — Video background", "category": "Hero", "settings": { "design": "video-background" } },
-    { "name": "Hero — Minimal text", "category": "Hero", "settings": { "design": "minimal-text" } },
-    { "name": "Hero — Announcement overlay", "category": "Hero", "settings": { "design": "announcement-overlay" } }
   ]
 }
 {% endschema %}
