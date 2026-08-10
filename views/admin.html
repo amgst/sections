@@ -323,21 +323,28 @@
       font-weight: 650;
       letter-spacing: .01em;
     }
-    .card-preview .mock-lines {
+    .card-preview--live {
+      background: #eceef0;
+    }
+    .card-preview--live iframe {
       position: absolute;
-      inset: 14px 14px auto 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+      top: 0;
+      left: 0;
+      width: 1200px;
+      height: 720px;
+      border: 0;
+      pointer-events: none;
+      transform-origin: top left;
+      background: #fff;
+      z-index: 0;
     }
-    .card-preview .mock-lines span {
-      display: block;
-      height: 7px;
-      border-radius: 4px;
-      background: rgba(255,255,255,.55);
+    .card-preview--live::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(15,17,18,.45), rgba(15,17,18,0) 55%);
+      z-index: 0;
     }
-    .card-preview .mock-lines span:nth-child(1) { width: 55%; }
-    .card-preview .mock-lines span:nth-child(2) { width: 80%; height: 4px; opacity: .7; }
 
     .card-body {
       padding: 12px 14px 14px;
@@ -533,7 +540,7 @@
       overflow: visible;
       flex: 1;
     }
-    .modal--preview { max-width: 920px; }
+    .modal--preview { max-width: 95vw; }
     .modal-body--preview {
       padding: 0;
       overflow: hidden;
@@ -853,12 +860,12 @@
     });
 
     function cardHtml(item) {
+      const previewMarkup = item.installable
+        ? `<div class="card-preview card-preview--live" data-preview-id="${item.id}"><iframe title="" tabindex="-1" aria-hidden="true"></iframe><span class="pill">${escapeHtml(item.category)}</span></div>`
+        : `<div class="card-preview" style="background:${gradientFor(item.category)}"><span class="pill">${escapeHtml(item.category)}</span></div>`;
       return `
         <div class="card">
-          <div class="card-preview" style="background:${gradientFor(item.category)}">
-            <div class="mock-lines"><span></span><span></span></div>
-            <span class="pill">${escapeHtml(item.category)}</span>
-          </div>
+          ${previewMarkup}
           <div class="card-body">
             <div class="card-title-row">
               <h3>${escapeHtml(item.name)}</h3>
@@ -885,6 +892,35 @@
       });
       scope.querySelectorAll('.preview-btn').forEach((btn) => {
         btn.addEventListener('click', () => openPreviewModal(btn.dataset.id));
+      });
+    }
+
+    const THUMB_DESIGN_WIDTH = 1200;
+    const thumbLoadObserver = 'IntersectionObserver' in window
+      ? new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const iframe = entry.target.querySelector('iframe');
+            if (iframe && !iframe.src) iframe.src = `/preview/${encodeURIComponent(entry.target.dataset.previewId)}`;
+            thumbLoadObserver.unobserve(entry.target);
+          });
+        }, { rootMargin: '200px' })
+      : null;
+    const thumbSizeObserver = 'ResizeObserver' in window
+      ? new ResizeObserver((entries) => {
+          entries.forEach((entry) => {
+            const iframe = entry.target.querySelector('iframe');
+            if (iframe) iframe.style.transform = `scale(${entry.contentRect.width / THUMB_DESIGN_WIDTH})`;
+          });
+        })
+      : null;
+
+    function bindLiveThumbnails(scope) {
+      scope.querySelectorAll('.card-preview--live').forEach((el) => {
+        if (thumbLoadObserver) thumbLoadObserver.observe(el);
+        else el.querySelector('iframe').src = `/preview/${encodeURIComponent(el.dataset.previewId)}`;
+        if (thumbSizeObserver) thumbSizeObserver.observe(el);
+        else el.querySelector('iframe').style.transform = `scale(${el.getBoundingClientRect().width / THUMB_DESIGN_WIDTH})`;
       });
     }
 
@@ -958,6 +994,7 @@
           </div>
         `;
         bindInstallButtons(content);
+        bindLiveThumbnails(content);
         return;
       }
 
@@ -979,6 +1016,7 @@
         </div>
       `).join('');
       bindInstallButtons(content);
+      bindLiveThumbnails(content);
     }
 
     async function loadTemplates() {
